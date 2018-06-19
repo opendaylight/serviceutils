@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright (c) 2017 Ericsson India Global Services Pvt Ltd. and others. All rights reserved.
+Copyright © 2018 Ericsson India Global Services Pvt Ltd. and others.  All rights reserved.
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License v1.0 which accompanies this distribution,
@@ -17,18 +17,38 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
   </parent>
 
   <groupId>org.opendaylight.serviceutils</groupId>
-  <artifactId>srm-aggregator</artifactId>
+  <artifactId>serviceutils-aggregator</artifactId>
   <version>0.1.3-SNAPSHOT</version>
-  <!-- <name> formatting is used by autorelease to parse and notify projects on
-       build failure. Please do not modify this unless you have a good reason. -->
-  <name>ODL :: serviceutils :: ${project.artifactId}</name>
+  <name>serviceutils</name>
   <packaging>pom</packaging>
 
+  <scm>
+    <connection>scm:git:ssh://git.opendaylight.org:29418/serviceutils.git</connection>
+    <developerConnection>scm:git:ssh://git.opendaylight.org:29418/serviceutils.git</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://wiki.opendaylight.org/view/serviceutils:Main</url>
+  </scm>
+
   <modules>
-    <module>api</module>
-    <module>impl</module>
-    <module>shell</module>
+    <module>commons</module>
+    <module>tools</module>
+    <module>features</module>
+    <module>artifacts</module>
+    <module>srm</module>
   </modules>
+
+  <profiles>
+    <profile>
+      <id>karaf</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+
+      <modules>
+        <module>karaf</module>
+      </modules>
+    </profile>
+  </profiles>
 
   <!-- DO NOT install or deploy the repo root pom as it's only needed to initiate a build -->
   <build>
