@@ -1,0 +1,3 @@
+<upgrade xmlns="urn:opendaylight:serviceutils:tools:config">
+    <upgradeInProgress>false</upgradeInProgress>
+</upgrade>
