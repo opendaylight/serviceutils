@@ -6,7 +6,7 @@
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.opendaylight.serviceutils.tools.mdsal.config.impl;
+package org.opendaylight.serviceutils.upgrade.impl;
 
 import static org.opendaylight.controller.md.sal.binding.api.WriteTransaction.CREATE_MISSING_PARENTS;
 
@@ -25,8 +25,8 @@ import org.opendaylight.controller.md.sal.binding.api.DataTreeIdentifier;
 import org.opendaylight.controller.md.sal.binding.api.DataTreeModification;
 import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
-import org.opendaylight.serviceutils.tools.mdsal.config.UpgradeState;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.tools.config.rev180628.Upgrade;
+import org.opendaylight.serviceutils.upgrade.UpgradeState;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.upgrade.rev180702.UpgradeConfig;
 import org.opendaylight.yangtools.concepts.ListenerRegistration;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.ops4j.pax.cdi.api.OsgiService;
@@ -36,19 +36,20 @@ import org.slf4j.LoggerFactory;
 
 @Singleton
 @OsgiServiceProvider(classes = UpgradeState.class)
-public class UpgradeStateListener implements ClusteredDataTreeChangeListener<Upgrade>, UpgradeState {
+public class UpgradeStateListener implements ClusteredDataTreeChangeListener<UpgradeConfig>, UpgradeState {
     private static final Logger LOG = LoggerFactory.getLogger(UpgradeStateListener.class);
 
     private final ListenerRegistration<UpgradeStateListener> registration;
-    private final DataTreeIdentifier<Upgrade> treeId = new DataTreeIdentifier<>(LogicalDatastoreType.CONFIGURATION,
-        InstanceIdentifier.create(Upgrade.class));
+    private final DataTreeIdentifier<UpgradeConfig> treeId =
+        new DataTreeIdentifier<>(LogicalDatastoreType.CONFIGURATION, InstanceIdentifier.create(UpgradeConfig.class));
     private final AtomicBoolean isUpgradeInProgress = new AtomicBoolean(false);
 
     @Inject
-    public UpgradeStateListener(@OsgiService DataBroker dataBroker, Upgrade upgrade) {
+    public UpgradeStateListener(@OsgiService DataBroker dataBroker, UpgradeConfig upgradeConfig) {
         registration = dataBroker.registerDataTreeChangeListener(treeId, UpgradeStateListener.this);
         WriteTransaction tx = dataBroker.newWriteOnlyTransaction();
-        tx.put(LogicalDatastoreType.CONFIGURATION, InstanceIdentifier.create(Upgrade.class), upgrade,
+        //TODO: DS Writes should ideally be done from one node to avoid ConflictingModExceptions
+        tx.put(LogicalDatastoreType.CONFIGURATION, InstanceIdentifier.create(UpgradeConfig.class), upgradeConfig,
             CREATE_MISSING_PARENTS);
         try {
             tx.commit().get();
@@ -71,9 +72,9 @@ public class UpgradeStateListener implements ClusteredDataTreeChangeListener<Upg
 
     @Override
     @SuppressWarnings("checkstyle:MissingSwitchDefault") // http://errorprone.info/bugpattern/UnnecessaryDefaultInEnumSwitch
-    public void onDataTreeChanged(@Nonnull Collection<DataTreeModification<Upgrade>> changes) {
-        for (DataTreeModification<Upgrade> change : changes) {
-            DataObjectModification<Upgrade> mod = change.getRootNode();
+    public void onDataTreeChanged(@Nonnull Collection<DataTreeModification<UpgradeConfig>> changes) {
+        for (DataTreeModification<UpgradeConfig> change : changes) {
+            DataObjectModification<UpgradeConfig> mod = change.getRootNode();
             switch (mod.getModificationType()) {
                 case DELETE:
                     isUpgradeInProgress.set(false);

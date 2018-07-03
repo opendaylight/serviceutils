@@ -6,7 +6,7 @@
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.opendaylight.serviceutils.tools.mdsal.config;
+package org.opendaylight.serviceutils.upgrade;
 
 /**
  * This service is only intented to be used by code that
