@@ -6,16 +6,16 @@ terms of the Eclipse Public License v1.0 which accompanies this distribution,
 and is available at http://www.eclipse.org/legal/epl-v10.html
 */
 
-module odl-serviceutils-config {
+module odl-serviceutils-upgrade {
     yang-version 1.1;
-    namespace "urn:opendaylight:serviceutils:tools:config";
-    prefix 'srv-conf';
+    namespace "urn:opendaylight:serviceutils:upgrade";
+    prefix 'srv-upgrade';
 
-    revision "2018-06-28" {
-        description "Serviceutils config models";
+    revision "2018-07-02" {
+        description "Serviceutils upgrade config models";
     }
 
-    container upgrade {
+    container upgrade-config {
         leaf upgradeInProgress {
             type boolean;
             default false;
