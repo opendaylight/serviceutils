@@ -100,6 +100,25 @@ module odl-srm-types {
          base entity-name-base;
     }
 
+    identity netvirt-l2gw {
+        description "SRM Entity name for l2gw service";
+        base entity-name-base;
+    }
+    identity netvirt-dhcp {
+        description "SRM Entity name for dhcp service";
+        base entity-name-base;
+    }
+
+    identity netvirt-l2gw-connection {
+        description "SRM Entity name for l2gw connection";
+        base entity-name-base;
+    }
+
+    identity netvirt-l2gw-node {
+        description "SRM Entity name for l2gw device name";
+        base entity-name-base;
+    }
+
     /* Service operations */
     identity service-op-base {
         description "Base identity for all srm operations";
