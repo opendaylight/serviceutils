@@ -5,7 +5,6 @@
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
-
 package org.opendaylight.serviceutils.upgrade.impl;
 
 import static org.opendaylight.controller.md.sal.binding.api.WriteTransaction.CREATE_MISSING_PARENTS;
@@ -14,10 +13,6 @@ import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nonnull;
-import javax.annotation.PreDestroy;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import org.opendaylight.controller.md.sal.binding.api.ClusteredDataTreeChangeListener;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.DataObjectModification;
@@ -29,13 +24,11 @@ import org.opendaylight.serviceutils.upgrade.UpgradeState;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.upgrade.rev180702.UpgradeConfig;
 import org.opendaylight.yangtools.concepts.ListenerRegistration;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
-import org.ops4j.pax.cdi.api.OsgiService;
-import org.ops4j.pax.cdi.api.OsgiServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Singleton
-@OsgiServiceProvider(classes = UpgradeState.class)
+// Do *NOT* use annotation based DI with the blueprint-maven-plugin here; the issue is that this will cause
+// problems in other projects having a dependency to this one (they would repeat and re-generate this project's BP XML).
 public class UpgradeStateListener implements ClusteredDataTreeChangeListener<UpgradeConfig>, UpgradeState {
     private static final Logger LOG = LoggerFactory.getLogger(UpgradeStateListener.class);
 
@@ -44,8 +37,7 @@ public class UpgradeStateListener implements ClusteredDataTreeChangeListener<Upg
         new DataTreeIdentifier<>(LogicalDatastoreType.CONFIGURATION, InstanceIdentifier.create(UpgradeConfig.class));
     private final AtomicBoolean isUpgradeInProgress = new AtomicBoolean(false);
 
-    @Inject
-    public UpgradeStateListener(@OsgiService DataBroker dataBroker, UpgradeConfig upgradeConfig) {
+    public UpgradeStateListener(DataBroker dataBroker, UpgradeConfig upgradeConfig) {
         registration = dataBroker.registerDataTreeChangeListener(treeId, UpgradeStateListener.this);
         WriteTransaction tx = dataBroker.newWriteOnlyTransaction();
         //TODO: DS Writes should ideally be done from one node to avoid ConflictingModExceptions
@@ -58,7 +50,6 @@ public class UpgradeStateListener implements ClusteredDataTreeChangeListener<Upg
         } // Possibility of OptimisticLockException?
     }
 
-    @PreDestroy
     public void close() {
         if (registration != null) {
             registration.close();
