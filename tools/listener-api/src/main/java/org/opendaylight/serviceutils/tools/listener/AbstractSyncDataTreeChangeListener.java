@@ -5,15 +5,15 @@
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
-package org.opendaylight.serviceutils.tools.mdsal.listener;
+package org.opendaylight.serviceutils.tools.listener;
 
 import java.util.Collection;
 import javax.annotation.Nonnull;
-import org.opendaylight.controller.md.sal.binding.api.DataBroker;
-import org.opendaylight.controller.md.sal.binding.api.DataTreeIdentifier;
-import org.opendaylight.controller.md.sal.binding.api.DataTreeModification;
-import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.infrautils.metrics.MetricProvider;
+import org.opendaylight.mdsal.binding.api.DataBroker;
+import org.opendaylight.mdsal.binding.api.DataTreeIdentifier;
+import org.opendaylight.mdsal.binding.api.DataTreeModification;
+import org.opendaylight.mdsal.common.api.LogicalDatastoreType;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 
@@ -27,9 +27,7 @@ import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
  * @param <T> type of the data object the listener is registered to.
  *
  * @author David Suárez (david.suarez.fuentes@gmail.com)
- * @deprecated Use {@code listener-api} instead.
  */
-@Deprecated
 public abstract class AbstractSyncDataTreeChangeListener<T extends DataObject> extends
         AbstractDataTreeChangeListener<T> {
 

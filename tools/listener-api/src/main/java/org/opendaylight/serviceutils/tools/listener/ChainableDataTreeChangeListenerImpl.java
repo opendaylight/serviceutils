@@ -5,13 +5,13 @@
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
-package org.opendaylight.serviceutils.tools.mdsal.listener;
+package org.opendaylight.serviceutils.tools.listener;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.opendaylight.controller.md.sal.binding.api.DataTreeChangeListener;
-import org.opendaylight.controller.md.sal.binding.api.DataTreeModification;
+import org.opendaylight.mdsal.binding.api.DataTreeChangeListener;
+import org.opendaylight.mdsal.binding.api.DataTreeModification;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +22,7 @@ import org.slf4j.LoggerFactory;
  * <p>Suitable as a delegate for listeners implementing ChainableDataTreeChangeListener.
  *
  * @author Michael Vorburger
- * @deprecated Use {@code listener-api} instead.
  */
-@Deprecated
 public final class ChainableDataTreeChangeListenerImpl<T extends DataObject>
         implements ChainableDataTreeChangeListener<T> {
 

@@ -29,6 +29,16 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
       <!-- Artifacts for downstream use -->
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>listener-api</artifactId>
+        <version>0.3.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>rpc-api</artifactId>
+        <version>0.3.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>tools-api</artifactId>
         <version>0.3.0-SNAPSHOT</version>
       </dependency>
@@ -42,6 +52,20 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>serviceutils-features</artifactId>
+        <version>${project.version}</version>
+        <classifier>features</classifier>
+        <type>xml</type>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>odl-serviceutils-listener</artifactId>
+        <version>${project.version}</version>
+        <classifier>features</classifier>
+        <type>xml</type>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>odl-serviceutils-rpc</artifactId>
         <version>${project.version}</version>
         <classifier>features</classifier>
         <type>xml</type>

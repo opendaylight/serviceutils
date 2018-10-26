@@ -5,13 +5,13 @@
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
-package org.opendaylight.serviceutils.tools.mdsal.listener;
+package org.opendaylight.serviceutils.tools.listener;
 
 import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
-import org.opendaylight.controller.md.sal.binding.api.DataObjectModification;
-import org.opendaylight.controller.md.sal.binding.api.DataTreeModification;
+import org.opendaylight.mdsal.binding.api.DataObjectModification;
+import org.opendaylight.mdsal.binding.api.DataTreeModification;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 
@@ -24,9 +24,7 @@ import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
  *
  * @param <T> type of the data object the listener is registered to.
  * @author David Suárez (david.suarez.fuentes@gmail.com)
- * @deprecated Use {@code listener-api} instead.
  */
-@Deprecated
 interface DataTreeChangeListenerActions<T extends DataObject> {
 
     /**
@@ -38,7 +36,7 @@ interface DataTreeChangeListenerActions<T extends DataObject> {
      */
     @SuppressWarnings("checkstyle:MissingSwitchDefault") // http://errorprone.info/bugpattern/UnnecessaryDefaultInEnumSwitch
     default void onDataTreeChanged(@Nonnull Collection<DataTreeModification<T>> changes,
-                                   DataStoreMetrics dataStoreMetrics) {
+        DataStoreMetrics dataStoreMetrics) {
         // This code is also in DataTreeEventCallbackRegistrarImpl and any changes should be applied there as well
         for (DataTreeModification<T> dataTreeModification : changes) {
             InstanceIdentifier<T> instanceIdentifier = dataTreeModification.getRootPath().getRootIdentifier();
@@ -123,7 +121,7 @@ interface DataTreeChangeListenerActions<T extends DataObject> {
      */
     @SuppressWarnings("InconsistentOverloads") // TODO remove when @Deprecated update() is removed
     default void update(@Nonnull InstanceIdentifier<T> instanceIdentifier, @Nonnull T originalDataObject,
-                        @Nonnull T updatedDataObject) {
+        @Nonnull T updatedDataObject) {
         update(originalDataObject, updatedDataObject);
     }
 

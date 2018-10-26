@@ -5,7 +5,7 @@
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
-package org.opendaylight.serviceutils.tools.mdsal.rpc;
+package org.opendaylight.serviceutils.tools.rpc;
 
 import static org.opendaylight.yangtools.yang.common.RpcError.ErrorType.APPLICATION;
 
@@ -35,10 +35,8 @@ import org.slf4j.Logger;
  * Utility to simplify correctly handling transformation of Future of RpcResult to return.
  *
  * @author Michael Vorburger.ch
- * @deprecated Use {@code FutureRpcResults} in {@code rpc-api} instead.
  */
 @Beta
-@Deprecated
 public final class FutureRpcResults {
 
     // NB: The FutureRpcResultsTest unit test for this util is in mdsalutil-testutils's src/test, not this project's

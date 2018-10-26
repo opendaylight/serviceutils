@@ -26,6 +26,8 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
 
   <modules>
     <module>api</module>
+    <module>listener-api</module>
+    <module>rpc-api</module>
     <module>testutils</module>
   </modules>
 

@@ -5,19 +5,17 @@
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
-package org.opendaylight.serviceutils.tools.mdsal.listener;
+package org.opendaylight.serviceutils.tools.listener;
 
 import java.util.EventListener;
-import org.opendaylight.controller.md.sal.binding.api.DataTreeChangeListener;
+import org.opendaylight.mdsal.binding.api.DataTreeChangeListener;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 
 /**
  * {@link DataTreeChangeListener} which can notify another DataTreeChangeListener.
  *
  * @author Michael Vorburger, based on discussions with Stephen Kitt
- * @deprecated Use {@code listener-api} instead.
  */
-@Deprecated
 public interface ChainableDataTreeChangeListener<T extends DataObject> extends EventListener {
 
     /**

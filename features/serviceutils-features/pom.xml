@@ -37,15 +37,25 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>odl-serviceutils-tools</artifactId>
-      <version>${project.version}</version>
+      <artifactId>odl-serviceutils-listener</artifactId>
+      <classifier>features</classifier>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>odl-serviceutils-rpc</artifactId>
       <classifier>features</classifier>
       <type>xml</type>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>odl-serviceutils-srm</artifactId>
-      <version>${project.version}</version>
+      <classifier>features</classifier>
+      <type>xml</type>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>odl-serviceutils-tools</artifactId>
       <classifier>features</classifier>
       <type>xml</type>
     </dependency>
