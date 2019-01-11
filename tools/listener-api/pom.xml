@@ -22,6 +22,11 @@
             <artifactId>inject</artifactId>
         </dependency>
         <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.opendaylight.infrautils</groupId>
             <artifactId>metrics-api</artifactId>
         </dependency>
