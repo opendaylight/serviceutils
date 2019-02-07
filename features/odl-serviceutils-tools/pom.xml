@@ -18,7 +18,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
 
   <groupId>org.opendaylight.serviceutils</groupId>
   <artifactId>odl-serviceutils-tools</artifactId>
-  <version>0.2.2-SNAPSHOT</version>
+  <version>0.2.3-SNAPSHOT</version>
   <packaging>feature</packaging>
   <name>OpenDaylight :: serviceutils :: TOOLS</name>
 
@@ -26,32 +26,32 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
     <dependency>
       <groupId>org.opendaylight.controller</groupId>
       <artifactId>odl-mdsal-broker</artifactId>
-      <version>1.8.2-SNAPSHOT</version>
+      <version>1.8.3-SNAPSHOT</version>
       <type>xml</type>
       <classifier>features</classifier>
     </dependency>
     <dependency>
       <groupId>org.opendaylight.infrautils</groupId>
       <artifactId>odl-infrautils-metrics</artifactId>
-      <version>1.4.2-SNAPSHOT</version>
+      <version>1.4.3-SNAPSHOT</version>
       <type>xml</type>
       <classifier>features</classifier>
     </dependency>
     <dependency>
       <groupId>org.opendaylight.serviceutils</groupId>
       <artifactId>tools-api</artifactId>
-      <version>0.2.2-SNAPSHOT</version>
+      <version>0.2.3-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.opendaylight.serviceutils</groupId>
       <artifactId>upgrade</artifactId>
-      <version>0.2.2-SNAPSHOT</version>
+      <version>0.2.3-SNAPSHOT</version>
     </dependency>
     <dependency>
       <!-- finalname="etc/opendaylight/datastore/initial/config/serviceutils-upgrade-config.xml" -->
       <groupId>org.opendaylight.serviceutils</groupId>
       <artifactId>upgrade</artifactId>
-      <version>0.2.2-SNAPSHOT</version>
+      <version>0.2.3-SNAPSHOT</version>
       <type>xml</type>
       <classifier>config</classifier>
     </dependency>
