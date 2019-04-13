@@ -8,7 +8,6 @@
 package org.opendaylight.serviceutils.tools.listener;
 
 import java.util.Collection;
-import javax.annotation.Nonnull;
 import org.opendaylight.infrautils.metrics.MetricProvider;
 import org.opendaylight.mdsal.binding.api.DataBroker;
 import org.opendaylight.mdsal.binding.api.DataTreeIdentifier;
@@ -47,7 +46,7 @@ public abstract class AbstractSyncDataTreeChangeListener<T extends DataObject> e
     }
 
     @Override
-    public final void onDataTreeChanged(@Nonnull Collection<DataTreeModification<T>> collection) {
+    public final void onDataTreeChanged(Collection<DataTreeModification<T>> collection) {
         super.onDataTreeChanged(collection, getDataStoreMetrics());
     }
 }

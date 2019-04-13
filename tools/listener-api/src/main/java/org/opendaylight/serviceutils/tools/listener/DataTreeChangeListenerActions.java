@@ -8,8 +8,8 @@
 package org.opendaylight.serviceutils.tools.listener;
 
 import java.util.Collection;
-import javax.annotation.Nonnull;
 import javax.inject.Singleton;
+import org.eclipse.jdt.annotation.NonNull;
 import org.opendaylight.mdsal.binding.api.DataObjectModification;
 import org.opendaylight.mdsal.binding.api.DataTreeModification;
 import org.opendaylight.yangtools.yang.binding.DataObject;
@@ -35,7 +35,7 @@ interface DataTreeChangeListenerActions<T extends DataObject> {
      * @param dataStoreMetrics data store metrics
      */
     @SuppressWarnings("checkstyle:MissingSwitchDefault") // http://errorprone.info/bugpattern/UnnecessaryDefaultInEnumSwitch
-    default void onDataTreeChanged(@Nonnull Collection<DataTreeModification<T>> changes,
+    default void onDataTreeChanged(Collection<DataTreeModification<T>> changes,
         DataStoreMetrics dataStoreMetrics) {
         // This code is also in DataTreeEventCallbackRegistrarImpl and any changes should be applied there as well
         for (DataTreeModification<T> dataTreeModification : changes) {
@@ -81,7 +81,7 @@ interface DataTreeChangeListenerActions<T extends DataObject> {
      * @param newDataObject      newly added object
      */
     @SuppressWarnings("InconsistentOverloads") // TODO remove when @Deprecated add() is removed
-    default void add(@Nonnull InstanceIdentifier<T> instanceIdentifier, @Nonnull T newDataObject) {
+    default void add(@NonNull InstanceIdentifier<T> instanceIdentifier, @NonNull T newDataObject) {
         add(newDataObject);
     }
 
@@ -91,7 +91,7 @@ interface DataTreeChangeListenerActions<T extends DataObject> {
      * @param newDataObject newly added object
      */
     @Deprecated
-    void add(@Nonnull T newDataObject);
+    void add(@NonNull T newDataObject);
 
     /**
      * Invoked when the data object has been removed.
@@ -100,7 +100,7 @@ interface DataTreeChangeListenerActions<T extends DataObject> {
      * @param removedDataObject  existing object being removed
      */
     @SuppressWarnings("InconsistentOverloads") // TODO remove when @Deprecated remove() is removed
-    default void remove(@Nonnull InstanceIdentifier<T> instanceIdentifier, @Nonnull T removedDataObject) {
+    default void remove(@NonNull InstanceIdentifier<T> instanceIdentifier, @NonNull T removedDataObject) {
         remove(removedDataObject);
     }
 
@@ -110,7 +110,7 @@ interface DataTreeChangeListenerActions<T extends DataObject> {
      * @param removedDataObject existing object being removed
      */
     @Deprecated
-    void remove(@Nonnull T removedDataObject);
+    void remove(@NonNull T removedDataObject);
 
     /**
      * Invoked when there is a change in the data object.
@@ -120,8 +120,8 @@ interface DataTreeChangeListenerActions<T extends DataObject> {
      * @param updatedDataObject  modified data object
      */
     @SuppressWarnings("InconsistentOverloads") // TODO remove when @Deprecated update() is removed
-    default void update(@Nonnull InstanceIdentifier<T> instanceIdentifier, @Nonnull T originalDataObject,
-        @Nonnull T updatedDataObject) {
+    default void update(@NonNull InstanceIdentifier<T> instanceIdentifier, @NonNull T originalDataObject,
+            @NonNull T updatedDataObject) {
         update(originalDataObject, updatedDataObject);
     }
 
@@ -132,5 +132,5 @@ interface DataTreeChangeListenerActions<T extends DataObject> {
      * @param updatedDataObject  modified data object
      */
     @Deprecated
-    void update(@Nonnull T originalDataObject, @Nonnull T updatedDataObject);
+    void update(@NonNull T originalDataObject, @NonNull T updatedDataObject);
 }
