@@ -12,7 +12,6 @@ import static org.opendaylight.controller.md.sal.binding.api.WriteTransaction.CR
 import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.annotation.Nonnull;
 import org.opendaylight.controller.md.sal.binding.api.ClusteredDataTreeChangeListener;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.DataObjectModification;
@@ -63,7 +62,7 @@ public class UpgradeStateListener implements ClusteredDataTreeChangeListener<Upg
 
     @Override
     @SuppressWarnings("checkstyle:MissingSwitchDefault") // http://errorprone.info/bugpattern/UnnecessaryDefaultInEnumSwitch
-    public void onDataTreeChanged(@Nonnull Collection<DataTreeModification<UpgradeConfig>> changes) {
+    public void onDataTreeChanged(Collection<DataTreeModification<UpgradeConfig>> changes) {
         for (DataTreeModification<UpgradeConfig> change : changes) {
             DataObjectModification<UpgradeConfig> mod = change.getRootNode();
             switch (mod.getModificationType()) {
