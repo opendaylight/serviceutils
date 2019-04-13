@@ -15,14 +15,13 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.SettableFuture;
+import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.NotThreadSafe;
+import org.eclipse.jdt.annotation.Nullable;
 import org.opendaylight.infrautils.utils.StackTraces;
 import org.opendaylight.yangtools.concepts.Builder;
 import org.opendaylight.yangtools.yang.common.OperationFailedException;
@@ -141,7 +140,6 @@ public final class FutureRpcResults {
         return fromListenableFuture(logger, StackTraces.getCallersCallerMethodName(), input, callable);
     }
 
-    @NotThreadSafe
     public static final class FutureRpcResultBuilder<I, O> implements Builder<Future<RpcResult<O>>> {
 
         private static final Function<Throwable, String> DEFAULT_ERROR_MESSAGE_FUNCTION = Throwable::getMessage;
