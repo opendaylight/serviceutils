@@ -7,7 +7,6 @@
  */
 package org.opendaylight.serviceutils.tools.mdsal.listener;
 
-import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
@@ -88,19 +87,19 @@ abstract class AbstractDataTreeChangeListener<T extends DataObject> implements D
 
     @Override
     @Deprecated
-    public void add(@Nonnull T newDataObject) {
+    public void add(T newDataObject) {
         // TODO: to be removed after all listeners migrated to use the new methods
     }
 
     @Override
     @Deprecated
-    public void remove(@Nonnull T removedDataObject) {
+    public void remove(T removedDataObject) {
         // TODO: to be removed after all listeners migrated to use the new methods
     }
 
     @Override
     @Deprecated
-    public void update(@Nonnull T originalDataObject, @Nonnull T updatedDataObject) {
+    public void update(T originalDataObject, T updatedDataObject) {
         // TODO: to be removed after all listeners migrated to use the new methods
     }
 }

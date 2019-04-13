@@ -9,7 +9,6 @@ package org.opendaylight.serviceutils.tools.mdsal.listener;
 
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
-import javax.annotation.Nonnull;
 import org.opendaylight.controller.md.sal.binding.api.ClusteredDataTreeChangeListener;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.DataTreeIdentifier;
@@ -60,7 +59,7 @@ public abstract class AbstractClusteredAsyncDataTreeChangeListener<T extends Dat
     }
 
     @Override
-    public final void onDataTreeChanged(@Nonnull Collection<DataTreeModification<T>> collection) {
+    public final void onDataTreeChanged(Collection<DataTreeModification<T>> collection) {
         executorService.execute(() -> super.onDataTreeChanged(collection,
                 getDataStoreMetrics()));
     }

@@ -15,14 +15,13 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.SettableFuture;
+import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.NotThreadSafe;
+import org.eclipse.jdt.annotation.Nullable;
 import org.opendaylight.infrautils.utils.StackTraces;
 import org.opendaylight.yangtools.concepts.Builder;
 import org.opendaylight.yangtools.yang.common.OperationFailedException;
@@ -143,11 +142,10 @@ public final class FutureRpcResults {
         return fromListenableFuture(logger, StackTraces.getCallersCallerMethodName(), input, callable);
     }
 
-    @NotThreadSafe
     public static final class FutureRpcResultBuilder<I, O> implements Builder<Future<RpcResult<O>>> {
-
         private static final Function<Throwable, String> DEFAULT_ERROR_MESSAGE_FUNCTION = Throwable::getMessage;
         private static final Consumer<Throwable> DEFAULT_ON_FAILURE = throwable -> { };
+
         private final Consumer<O> defaultOnSuccess = result -> { };
 
         // fixed (final) builder values
@@ -158,7 +156,7 @@ public final class FutureRpcResults {
 
         // optional builder values, which can be overridden by users
         private Function<Throwable, String> rpcErrorMessageFunction = DEFAULT_ERROR_MESSAGE_FUNCTION;
-        private Consumer<O> onSuccessConsumer = defaultOnSuccess;
+        private Consumer<O> onSuccessConsumer = result -> { };
         private Consumer<Throwable> onFailureConsumer = DEFAULT_ON_FAILURE;
 
         // defaulted builder values, which can be overridden by users
