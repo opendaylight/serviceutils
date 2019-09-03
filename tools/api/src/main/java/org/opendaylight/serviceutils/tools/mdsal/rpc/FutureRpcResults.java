@@ -46,7 +46,9 @@ public final class FutureRpcResults {
     // TODO Once matured in genius, this class could be proposed to org.opendaylight.yangtools.yang.common
     // (This was proposed in Oct on yangtools-dev list, but there little interest due to plans to change RpcResult.)
 
-    private FutureRpcResults() {}
+    private FutureRpcResults() {
+
+    }
 
     /**
      * Create a Builder for a ListenableFuture to Future&lt;RpcResult&lt;O&gt;&gt; transformer. By default, the future
