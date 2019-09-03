@@ -29,7 +29,9 @@ import org.opendaylight.yangtools.yang.common.RpcResult;
 @SuppressFBWarnings("BC_UNCONFIRMED_CAST") // see https://wiki.opendaylight.org/view/BestPractices/Coding_Guidelines#Unchecked.2Funconfirmed_cast_from_com.google.common.truth.Subject_to_com.google.common.truth.BooleanSubject_etc.
 public final class TestFutureRpcResults {
 
-    private TestFutureRpcResults() { }
+    private TestFutureRpcResults() {
+
+    }
 
     private static <T> T getResult(RpcResult<T> rpcResult) {
         assertThat(rpcResult.isSuccessful()).named("rpcResult.isSuccessful").isTrue();
