@@ -53,6 +53,13 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
         <version>0.4.2-SNAPSHOT</version>
       </dependency>
 
+      <!-- Reference implementations -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>srm-impl</artifactId>
+        <version>0.4.2-SNAPSHOT</version>
+      </dependency>
+
       <!-- Test support -->
       <dependency>
         <groupId>${project.groupId}</groupId>
