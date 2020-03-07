@@ -12,7 +12,6 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.inject.Singleton;
-
 import org.apache.aries.blueprint.annotation.service.Service;
 import org.opendaylight.serviceutils.srm.RecoverableListener;
 import org.opendaylight.serviceutils.srm.ServiceRecoveryInterface;
@@ -23,11 +22,9 @@ import org.slf4j.LoggerFactory;
 @Singleton
 @Service(classes = ServiceRecoveryRegistry.class)
 public class ServiceRecoveryRegistryImpl implements ServiceRecoveryRegistry {
-
     private static final Logger LOG = LoggerFactory.getLogger(ServiceRecoveryRegistryImpl.class);
 
     private final Map<String, ServiceRecoveryInterface> serviceRecoveryRegistry = new ConcurrentHashMap<>();
-
     private final Map<String, Queue<RecoverableListener>> recoverableListenersMap =
             new ConcurrentHashMap<>();
 
