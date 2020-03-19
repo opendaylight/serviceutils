@@ -10,7 +10,7 @@
 
     <groupId>org.opendaylight.serviceutils</groupId>
     <artifactId>odl-serviceutils-rpc</artifactId>
-    <version>0.5.0-SNAPSHOT</version>
+    <version>0.5.1-SNAPSHOT</version>
     <packaging>feature</packaging>
     <name>OpenDaylight :: serviceutils :: RPC tools</name>
 
@@ -19,14 +19,14 @@
             <dependency>
                 <groupId>org.opendaylight.infrautils</groupId>
                 <artifactId>infrautils-artifacts</artifactId>
-                <version>1.7.0-SNAPSHOT</version>
+                <version>1.7.1-SNAPSHOT</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.opendaylight.serviceutils</groupId>
                 <artifactId>serviceutils-artifacts</artifactId>
-                <version>0.5.0-SNAPSHOT</version>
+                <version>0.5.1-SNAPSHOT</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
