@@ -35,8 +35,14 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
       <artifactId>yang-binding</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>sal-binding-api</artifactId>
+      <groupId>org.opendaylight.mdsal</groupId>
+      <artifactId>mdsal-dom-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.opendaylight.mdsal</groupId>
+      <artifactId>mdsal-binding-api</artifactId>
+      <version>5.0.9</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
   <build>
