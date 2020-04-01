@@ -39,8 +39,8 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
       <artifactId>yang-binding</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.opendaylight.controller</groupId>
-      <artifactId>sal-binding-api</artifactId>
+      <groupId>org.opendaylight.mdsal</groupId>
+      <artifactId>mdsal-dom-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.opendaylight.infrautils</groupId>
@@ -62,6 +62,10 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <dependency>
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.opendaylight.mdsal</groupId>
+      <artifactId>mdsal-binding-api</artifactId>
     </dependency>
   </dependencies>
 </project>
