@@ -9,10 +9,10 @@ package org.opendaylight.serviceutils.tools.mdsal.listener;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import org.opendaylight.controller.md.sal.binding.api.DataBroker;
-import org.opendaylight.controller.md.sal.binding.api.DataTreeChangeListener;
-import org.opendaylight.controller.md.sal.binding.api.DataTreeIdentifier;
-import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
+import org.opendaylight.mdsal.binding.api.DataBroker;
+import org.opendaylight.mdsal.binding.api.DataTreeChangeListener;
+import org.opendaylight.mdsal.binding.api.DataTreeIdentifier;
+import org.opendaylight.mdsal.common.api.LogicalDatastoreType;
 import org.opendaylight.infrautils.metrics.MetricProvider;
 import org.opendaylight.yangtools.concepts.ListenerRegistration;
 import org.opendaylight.yangtools.yang.binding.DataObject;
@@ -43,14 +43,14 @@ abstract class AbstractDataTreeChangeListener<T extends DataObject> implements D
 
     AbstractDataTreeChangeListener(DataBroker dataBroker, LogicalDatastoreType datastoreType,
                                    InstanceIdentifier<T> instanceIdentifier) {
-        this(dataBroker, new DataTreeIdentifier<>(datastoreType, instanceIdentifier));
+        this(dataBroker, DataTreeIdentifier.create(datastoreType, instanceIdentifier));
     }
 
     AbstractDataTreeChangeListener(DataBroker dataBroker,
                                    LogicalDatastoreType datastoreType,
                                    InstanceIdentifier<T> instanceIdentifier,
                                    MetricProvider metricProvider) {
-        this(dataBroker, new DataTreeIdentifier<>(datastoreType, instanceIdentifier));
+        this(dataBroker, DataTreeIdentifier.create(datastoreType, instanceIdentifier));
         this.dataStoreMetrics = new DataStoreMetrics(metricProvider, getClass());
     }
 
