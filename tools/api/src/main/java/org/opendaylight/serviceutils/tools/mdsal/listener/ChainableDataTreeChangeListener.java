@@ -8,7 +8,7 @@
 package org.opendaylight.serviceutils.tools.mdsal.listener;
 
 import java.util.EventListener;
-import org.opendaylight.controller.md.sal.binding.api.DataTreeChangeListener;
+import org.opendaylight.mdsal.binding.api.DataTreeChangeListener;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 
 /**
