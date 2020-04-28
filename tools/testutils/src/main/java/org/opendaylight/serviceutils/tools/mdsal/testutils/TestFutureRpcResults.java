@@ -8,6 +8,7 @@
 package org.opendaylight.serviceutils.tools.mdsal.testutils;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -34,9 +35,9 @@ public final class TestFutureRpcResults {
     }
 
     private static <T> T getResult(RpcResult<T> rpcResult) {
-        assertThat(rpcResult.isSuccessful()).named("rpcResult.isSuccessful").isTrue();
+        assertWithMessage("rpcResult.isSuccessful").that(rpcResult.isSuccessful()).isTrue();
         T result = rpcResult.getResult();
-        assertThat(result).named("result").isNotNull();
+        assertWithMessage("result").that(result).isNotNull();
         return result;
     }
 
@@ -62,8 +63,8 @@ public final class TestFutureRpcResults {
     public static <T> void assertRpcErrorWithoutCausesOrMessages(Future<RpcResult<T>> futureRpcResult)
             throws InterruptedException, ExecutionException, TimeoutException {
         RpcResult<T> rpcResult = futureRpcResult.get(1, MINUTES);
-        assertThat(rpcResult.isSuccessful()).named("rpcResult.isSuccessful").isFalse();
-        assertThat(rpcResult.getErrors()).named("rpcResult.errors").isEmpty();
+        assertWithMessage("rpcResult.isSuccessful").that(rpcResult.isSuccessful()).isFalse();
+        assertWithMessage("rpcResult.errors").that(rpcResult.getErrors()).isEmpty();
     }
 
     public static <T> void assertRpcErrorCause(Future<RpcResult<T>> futureRpcResult, Class<?> expectedExceptionClass,
@@ -73,15 +74,17 @@ public final class TestFutureRpcResults {
 
     private static <T> void assertRpcErrorCause(RpcResult<T> rpcResult, Class<?> expected1stExceptionClass,
             String expected1stRpcErrorMessage) {
-        assertThat(rpcResult.isSuccessful()).named("rpcResult.isSuccessful").isFalse();
+        assertWithMessage("rpcResult.isSuccessful").that(rpcResult.isSuccessful()).isFalse();
         Collection<RpcError> errors = rpcResult.getErrors();
-        assertThat(errors).named("rpcResult.errors").hasSize(1);
+        assertWithMessage("rpcResult.errors").that(errors).hasSize(1);
         RpcError error1 = errors.iterator().next();
-        assertThat(error1.getErrorType()).named("rpcResult.errors[0].errorType").isEqualTo(ErrorType.APPLICATION);
-        assertThat(error1.getMessage()).named("rpcResult.errors[0].message").isEqualTo(expected1stRpcErrorMessage);
+        assertWithMessage("rpcResult.errors[0].errorType").that(error1.getErrorType()).isEqualTo(ErrorType.APPLICATION);
+        assertWithMessage("rpcResult.errors[0].message").that(error1.getMessage())
+            .isEqualTo(expected1stRpcErrorMessage);
         if (error1.getCause() != null) {
             // Check needed because FutureRpcResults does not propagate cause if OperationFailedException
-            assertThat(error1.getCause()).named("rpcResult.errors[0].cause").isInstanceOf(expected1stExceptionClass);
+            assertWithMessage("rpcResult.errors[0].cause").that(error1.getCause())
+                .isInstanceOf(expected1stExceptionClass);
         }
     }
 
