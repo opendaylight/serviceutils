@@ -3,9 +3,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.2.0 http://karaf.apache.org/xmlns/features/v1.2.0">
 
-  <feature name='odl-serviceutils-tools' version='${project.version}'>
-    <configfile
-      finalname="etc/opendaylight/datastore/initial/config/serviceutils-upgrade-config.xml">mvn:org.opendaylight.serviceutils/upgrade/${project.version}/xml/config</configfile>
-    <feature version="[2,3)">odl-mdsal-broker</feature>
+  <feature name='odl-serviceutils-listener' version='${project.version}'>
+    <feature version="[6,7)">odl-mdsal-binding-api</feature>
   </feature>
 </features>

@@ -6,6 +6,7 @@
         <groupId>org.opendaylight.odlparent</groupId>
         <artifactId>single-feature-parent</artifactId>
         <version>7.0.2</version>
+        <relativePath/>
     </parent>
 
     <groupId>org.opendaylight.serviceutils</groupId>
@@ -50,12 +51,6 @@
         <dependency>
             <groupId>org.opendaylight.yangtools</groupId>
             <artifactId>odl-yangtools-common</artifactId>
-            <type>xml</type>
-            <classifier>features</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.opendaylight.yangtools</groupId>
-            <artifactId>odl-yangtools-util</artifactId>
             <type>xml</type>
             <classifier>features</classifier>
         </dependency>
