@@ -44,12 +44,6 @@
     <dependencies>
         <dependency>
             <groupId>org.opendaylight.infrautils</groupId>
-            <artifactId>odl-infrautils-inject</artifactId>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>
-        <dependency>
-            <groupId>org.opendaylight.infrautils</groupId>
             <artifactId>odl-infrautils-metrics</artifactId>
             <classifier>features</classifier>
             <type>xml</type>
