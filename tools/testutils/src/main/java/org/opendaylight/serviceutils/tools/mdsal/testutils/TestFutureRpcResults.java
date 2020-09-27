@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
-import org.opendaylight.serviceutils.tools.mdsal.rpc.FutureRpcResults;
+import org.opendaylight.serviceutils.tools.rpc.FutureRpcResults;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.common.RpcError;
 import org.opendaylight.yangtools.yang.common.RpcError.ErrorType;
