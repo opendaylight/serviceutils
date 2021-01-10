@@ -7,12 +7,12 @@
  */
 package org.opendaylight.serviceutils.upgrade.impl;
 
+import com.google.common.collect.Iterables;
 import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.opendaylight.mdsal.binding.api.ClusteredDataTreeChangeListener;
 import org.opendaylight.mdsal.binding.api.DataBroker;
-import org.opendaylight.mdsal.binding.api.DataObjectModification;
 import org.opendaylight.mdsal.binding.api.DataTreeIdentifier;
 import org.opendaylight.mdsal.binding.api.DataTreeModification;
 import org.opendaylight.mdsal.binding.api.WriteTransaction;
@@ -26,16 +26,16 @@ import org.slf4j.LoggerFactory;
 
 // Do *NOT* use annotation based DI with the blueprint-maven-plugin here; the issue is that this will cause
 // problems in other projects having a dependency to this one (they would repeat and re-generate this project's BP XML).
-public class UpgradeStateListener implements ClusteredDataTreeChangeListener<UpgradeConfig>, UpgradeState {
+// FIXME: this problem is solvable by splitting into API + implementation, in which case we end up having scope=test
+public final class UpgradeStateListener implements UpgradeState, ClusteredDataTreeChangeListener<UpgradeConfig> {
     private static final Logger LOG = LoggerFactory.getLogger(UpgradeStateListener.class);
 
-    private final ListenerRegistration<UpgradeStateListener> registration;
-    private final DataTreeIdentifier<UpgradeConfig> treeId =
-        DataTreeIdentifier.create(LogicalDatastoreType.CONFIGURATION, InstanceIdentifier.create(UpgradeConfig.class));
     private final AtomicBoolean isUpgradeInProgress = new AtomicBoolean(false);
+    private final ListenerRegistration<UpgradeStateListener> registration;
 
     public UpgradeStateListener(DataBroker dataBroker, UpgradeConfig upgradeConfig) {
-        registration = dataBroker.registerDataTreeChangeListener(treeId, UpgradeStateListener.this);
+        registration = dataBroker.registerDataTreeChangeListener(DataTreeIdentifier.create(
+            LogicalDatastoreType.CONFIGURATION, InstanceIdentifier.create(UpgradeConfig.class)), this);
         WriteTransaction tx = dataBroker.newWriteOnlyTransaction();
         //TODO: DS Writes should ideally be done from one node to avoid ConflictingModExceptions
         tx.put(LogicalDatastoreType.CONFIGURATION, InstanceIdentifier.create(UpgradeConfig.class), upgradeConfig);
@@ -47,9 +47,7 @@ public class UpgradeStateListener implements ClusteredDataTreeChangeListener<Upg
     }
 
     public void close() {
-        if (registration != null) {
-            registration.close();
-        }
+        registration.close();
     }
 
     @Override
@@ -58,20 +56,8 @@ public class UpgradeStateListener implements ClusteredDataTreeChangeListener<Upg
     }
 
     @Override
-    @SuppressWarnings("checkstyle:MissingSwitchDefault") // http://errorprone.info/bugpattern/UnnecessaryDefaultInEnumSwitch
     public void onDataTreeChanged(Collection<DataTreeModification<UpgradeConfig>> changes) {
-        for (DataTreeModification<UpgradeConfig> change : changes) {
-            DataObjectModification<UpgradeConfig> mod = change.getRootNode();
-            switch (mod.getModificationType()) {
-                case DELETE:
-                    isUpgradeInProgress.set(false);
-                    break;
-                case SUBTREE_MODIFIED:
-                case WRITE:
-                    isUpgradeInProgress.set(mod.getDataAfter().isUpgradeInProgress());
-                    break;
-            }
-        }
-
+        final UpgradeConfig change = Iterables.getLast(changes).getRootNode().getDataAfter();
+        isUpgradeInProgress.set(change != null && change.getUpgradeInProgress());
     }
 }
