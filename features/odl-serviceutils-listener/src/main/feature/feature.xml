@@ -5,5 +5,6 @@
 
   <feature name='odl-serviceutils-listener' version='${project.version}'>
     <feature version="[7,8)">odl-mdsal-binding-api</feature>
+    <feature version="[1.9,2)">odl-infrautils-metrics</feature>
   </feature>
 </features>
