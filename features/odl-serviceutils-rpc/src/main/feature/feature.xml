@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.2.0 http://karaf.apache.org/xmlns/features/v1.2.0">
 
   <feature name='odl-serviceutils-rpc' version='${project.version}'>
-    <feature version="[6,7)">odl-yangtools-common</feature>
-    <feature version="[1.9,2)">odl-infrautils-utils</feature>
+    <feature version="[7,8)">odl-yangtools-common</feature>
+    <feature version="[2,3)">odl-infrautils-utils</feature>
   </feature>
 </features>
