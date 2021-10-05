@@ -27,13 +27,12 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
   <dependencies>
     <dependency>
       <groupId>org.opendaylight.serviceutils</groupId>
-      <artifactId>tools-api</artifactId>
+      <artifactId>rpc-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.opendaylight.serviceutils</groupId>
-      <artifactId>rpc-api</artifactId>
-      <version>${project.version}</version>
+      <groupId>org.opendaylight.mdsal</groupId>
+      <artifactId>yang-binding</artifactId>
     </dependency>
     <dependency>
       <groupId>org.opendaylight.yangtools</groupId>
