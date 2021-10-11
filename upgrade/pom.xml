@@ -43,6 +43,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
       <artifactId>mdsal-binding-api</artifactId>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <!-- Do *NOT* use annotation based DI with the blueprint-maven-plugin here; the issue is that this

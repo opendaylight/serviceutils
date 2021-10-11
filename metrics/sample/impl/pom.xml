@@ -11,15 +11,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-      <groupId>org.opendaylight.infrautils</groupId>
-      <artifactId>parent</artifactId>
-      <version>3.0.0-SNAPSHOT</version>
-      <relativePath>../../../common/parent</relativePath>
+    <groupId>org.opendaylight.serviceutils</groupId>
+    <artifactId>quality-parent</artifactId>
+    <version>0.9.0-SNAPSHOT</version>
+    <relativePath>../../../commons/quality-parent</relativePath>
   </parent>
 
   <artifactId>metrics-sample</artifactId>
   <packaging>bundle</packaging>
-  <name>ODL :: infrautils :: ${project.artifactId}</name>
+  <name>ODL :: serviceutils :: ${project.artifactId}</name>
 
   <dependencies>
     <dependency>
@@ -60,7 +60,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>org.opendaylight.infrautils</groupId>
       <artifactId>inject.guice.testutils</artifactId>
     </dependency>
     <dependency>

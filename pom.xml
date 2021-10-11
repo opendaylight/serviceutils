@@ -34,6 +34,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
     <module>tools</module>
     <module>features</module>
     <module>artifacts</module>
+    <module>metrics</module>
     <module>srm</module>
     <module>upgrade</module>
   </modules>
