@@ -12,7 +12,7 @@
   <artifactId>odl-infrautils-metrics-sample</artifactId>
   <packaging>feature</packaging>
 
-  <name>OpenDaylight :: Infrautils :: Metrics Example</name>
+  <name>ODL :: serviceutils :: Metrics Example</name>
 
   <properties>
     <!-- This example needs an implmentation of the metrics API to be first installed

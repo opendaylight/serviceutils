@@ -12,7 +12,7 @@
   <artifactId>odl-infrautils-metrics-prometheus</artifactId>
   <packaging>feature</packaging>
 
-  <name>OpenDaylight :: Infrautils :: Metrics Prometheus Support</name>
+  <name>ODL :: serviceutils :: Metrics Prometheus Support</name>
 
   <dependencies>
     <dependency>

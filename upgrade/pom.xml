@@ -43,6 +43,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
       <artifactId>mdsal-binding-api</artifactId>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <!-- Do *NOT* use annotation based DI with the blueprint-maven-plugin here; the issue is that this
@@ -68,6 +69,16 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
             </configuration>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Automatic-Module-Name>org.opendaylight.serviceutils.upgrade</Automatic-Module-Name>
+          </instructions>
+        </configuration>
       </plugin>
     </plugins>
   </build>

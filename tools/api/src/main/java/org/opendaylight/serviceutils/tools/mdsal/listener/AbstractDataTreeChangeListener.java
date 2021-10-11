@@ -9,11 +9,11 @@ package org.opendaylight.serviceutils.tools.mdsal.listener;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import org.opendaylight.infrautils.metrics.MetricProvider;
 import org.opendaylight.mdsal.binding.api.DataBroker;
 import org.opendaylight.mdsal.binding.api.DataTreeChangeListener;
 import org.opendaylight.mdsal.binding.api.DataTreeIdentifier;
 import org.opendaylight.mdsal.common.api.LogicalDatastoreType;
+import org.opendaylight.serviceutils.metrics.MetricProvider;
 import org.opendaylight.yangtools.concepts.ListenerRegistration;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
