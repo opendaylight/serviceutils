@@ -6,10 +6,10 @@
  terms of the Eclipse Public License v1.0 which accompanies this distribution,
  and is available at http://www.eclipse.org/legal/epl-v10.html
  -->
-<features xmlns="http://karaf.apache.org/xmlns/features/v1.2.0" name="odl-infrautils-${project.version}">
-    <feature name="odl-infrautils-metrics" version="${project.version}">
-        <configfile finalname="etc/org.opendaylight.infrautils.metrics.cfg">
-            mvn:org.opendaylight.infrautils/metrics-impl/${project.version}/cfg/config
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.2.0" name="odl-serviceutils-${project.version}">
+    <feature name="odl-serviceutils-metrics" version="${project.version}">
+        <configfile finalname="etc/org.opendaylight.serviceutils.metrics.cfg">
+            mvn:org.opendaylight.serviceutils/metrics-impl/${project.version}/cfg/config
         </configfile>
         <feature version="[9,10)">odl-dropwizard-metrics</feature>
     </feature>
