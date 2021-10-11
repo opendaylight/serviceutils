@@ -27,6 +27,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
     <modules>
         <module>serviceutils-features</module>
         <module>odl-serviceutils-listener</module>
+        <module>odl-serviceutils-metrics</module>
         <module>odl-serviceutils-rpc</module>
         <module>odl-serviceutils-srm</module>
         <module>odl-serviceutils-tools</module>
