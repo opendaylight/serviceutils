@@ -29,7 +29,7 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.opendaylight.infrautils</groupId>
+            <groupId>org.opendaylight.serviceutils</groupId>
             <artifactId>metrics-api</artifactId>
         </dependency>
         <dependency>

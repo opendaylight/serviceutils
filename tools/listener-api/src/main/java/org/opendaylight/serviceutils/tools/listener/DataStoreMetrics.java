@@ -7,9 +7,9 @@
  */
 package org.opendaylight.serviceutils.tools.listener;
 
-import org.opendaylight.infrautils.metrics.Meter;
-import org.opendaylight.infrautils.metrics.MetricDescriptor;
-import org.opendaylight.infrautils.metrics.MetricProvider;
+import org.opendaylight.serviceutils.metrics.Meter;
+import org.opendaylight.serviceutils.metrics.MetricDescriptor;
+import org.opendaylight.serviceutils.metrics.MetricProvider;
 
 /* intentionally *NOT* public */ class DataStoreMetrics {
 

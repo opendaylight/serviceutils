@@ -20,7 +20,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
   <artifactId>odl-serviceutils-srm</artifactId>
   <version>0.9.0-SNAPSHOT</version>
   <packaging>feature</packaging>
-  <name>OpenDaylight :: serviceutils :: SRM</name>
+  <name>ODL :: serviceutils :: SRM</name>
 
   <dependencies>
     <!-- Other Features -->
