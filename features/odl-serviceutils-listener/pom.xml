@@ -11,7 +11,7 @@
 
     <groupId>org.opendaylight.serviceutils</groupId>
     <artifactId>odl-serviceutils-listener</artifactId>
-    <version>0.7.3-SNAPSHOT</version>
+    <version>0.7.4-SNAPSHOT</version>
     <packaging>feature</packaging>
     <name>OpenDaylight :: serviceutils :: listener tools</name>
 
@@ -34,7 +34,7 @@
             <dependency>
                 <groupId>org.opendaylight.serviceutils</groupId>
                 <artifactId>serviceutils-artifacts</artifactId>
-                <version>0.7.3-SNAPSHOT</version>
+                <version>0.7.4-SNAPSHOT</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
