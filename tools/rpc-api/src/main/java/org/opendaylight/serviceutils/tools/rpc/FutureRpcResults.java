@@ -7,7 +7,7 @@
  */
 package org.opendaylight.serviceutils.tools.rpc;
 
-import static org.opendaylight.yangtools.yang.common.RpcError.ErrorType.APPLICATION;
+import static org.opendaylight.yangtools.yang.common.ErrorType.APPLICATION;
 
 import com.google.common.annotations.Beta;
 import com.google.common.util.concurrent.FutureCallback;
