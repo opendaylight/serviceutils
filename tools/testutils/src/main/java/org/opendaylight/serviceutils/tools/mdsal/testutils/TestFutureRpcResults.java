@@ -18,8 +18,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 import org.opendaylight.serviceutils.tools.rpc.FutureRpcResults;
 import org.opendaylight.yangtools.yang.binding.DataObject;
+import org.opendaylight.yangtools.yang.common.ErrorType;
 import org.opendaylight.yangtools.yang.common.RpcError;
-import org.opendaylight.yangtools.yang.common.RpcError.ErrorType;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 
 /**

@@ -7,7 +7,7 @@
  */
 package org.opendaylight.serviceutils.metrics;
 
-import org.opendaylight.infrautils.utils.UncheckedCloseable;
+import org.opendaylight.yangtools.concepts.Registration;
 
 /**
  * Meter metric, which measures throughput.
@@ -15,7 +15,7 @@ import org.opendaylight.infrautils.utils.UncheckedCloseable;
  * <p>Note that this with {@code mark()} measures the rate at which a set of events occur;
  * whereas {@link Counter} is for things which will {@code increase()} - and can also {@code decrease()}.
  */
-public interface Meter extends UncheckedCloseable {
+public interface Meter extends Registration {
 
     /**
      * Mark the occurrence of an event.
