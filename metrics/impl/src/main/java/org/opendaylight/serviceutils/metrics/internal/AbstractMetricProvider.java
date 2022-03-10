@@ -31,7 +31,6 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.eclipse.jdt.annotation.Nullable;
-import org.opendaylight.infrautils.utils.UncheckedCloseable;
 import org.opendaylight.serviceutils.metrics.Counter;
 import org.opendaylight.serviceutils.metrics.Labeled;
 import org.opendaylight.serviceutils.metrics.Meter;
@@ -40,6 +39,7 @@ import org.opendaylight.serviceutils.metrics.MetricProvider;
 import org.opendaylight.serviceutils.metrics.Timer;
 import org.opendaylight.serviceutils.metrics.function.CheckedCallable;
 import org.opendaylight.serviceutils.metrics.function.CheckedRunnable;
+import org.opendaylight.yangtools.concepts.AbstractRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -362,24 +362,21 @@ abstract class AbstractMetricProvider implements MetricProvider {
         }
     }
 
-    private abstract class CloseableMetricImpl implements UncheckedCloseable {
-        private volatile boolean isClosed = false;
+    private abstract class CloseableMetricImpl extends AbstractRegistration {
         protected final String id;
 
         CloseableMetricImpl(String id) {
             this.id = id;
         }
 
-        protected void checkIfClosed() {
-            if (isClosed) {
+        final void checkIfClosed() {
+            if (isClosed()) {
                 throw new IllegalStateException("Metric closed: " + id);
             }
         }
 
         @Override
-        public void close() {
-            checkIfClosed();
-            isClosed = true;
+        protected void removeRegistration() {
             if (!registry.remove(id)) {
                 LOG.warn("Metric remove did not actualy remove: {}", id);
             }
@@ -413,8 +410,8 @@ abstract class AbstractMetricProvider implements MetricProvider {
         }
 
         @Override
-        public void close() {
-            super.close();
+        protected void removeRegistration() {
+            super.removeRegistration();
             meters.remove(id);
         }
     }
@@ -459,8 +456,8 @@ abstract class AbstractMetricProvider implements MetricProvider {
         }
 
         @Override
-        public void close() {
-            super.close();
+        protected void removeRegistration() {
+            super.removeRegistration();
             counters.remove(id);
         }
     }
