@@ -32,7 +32,7 @@ import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
  * You could and probably should share such an Executor among several listeners in your project.
  *
  * <p>- If the listener needs to preserve the order of notifications, then (only) use a single thread executor typically
- * an {@link org.opendaylight.infrautils.utils.concurrent.Executors#newSingleThreadExecutor(String, org.slf4j.Logger)}.
+ * an {@code org.opendaylight.infrautils.utils.concurrent.Executors#newSingleThreadExecutor(String, org.slf4j.Logger)}.
  *
  * <p>- If there are multiple listeners: they could even share an Executor as the ones in {@link SpecialExecutors},
  *
