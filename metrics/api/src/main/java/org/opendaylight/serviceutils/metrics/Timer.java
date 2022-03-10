@@ -7,14 +7,14 @@
  */
 package org.opendaylight.serviceutils.metrics;
 
-import org.opendaylight.infrautils.utils.UncheckedCloseable;
 import org.opendaylight.serviceutils.metrics.function.CheckedCallable;
 import org.opendaylight.serviceutils.metrics.function.CheckedRunnable;
+import org.opendaylight.yangtools.concepts.Registration;
 
 /**
  * A timer metric which aggregates timing durations.
  */
-public interface Timer extends UncheckedCloseable {
+public interface Timer extends Registration {
 
     /**
      * Times and records the duration of event which returns a value.

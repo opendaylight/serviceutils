@@ -24,7 +24,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Singleton
 @Component(service = { })
-public class MetricsAdvancedExample {
+public final class MetricsAdvancedExample {
 
     public static class MacLabeledMeter {
         private final Labeled<Meter> labeledMeter;
