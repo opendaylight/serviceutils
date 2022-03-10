@@ -6,6 +6,7 @@
   <feature name='odl-serviceutils-tools' version='${project.version}'>
     <configfile
       finalname="etc/opendaylight/datastore/initial/config/serviceutils-upgrade-config.xml">mvn:org.opendaylight.serviceutils/upgrade/${project.version}/xml/config</configfile>
-    <feature version="[4,5)">odl-mdsal-broker</feature>
+    <feature version="[5,6)">odl-controller-blueprint</feature>
+    <feature version="[5,6)">odl-mdsal-broker</feature>
   </feature>
 </features>
