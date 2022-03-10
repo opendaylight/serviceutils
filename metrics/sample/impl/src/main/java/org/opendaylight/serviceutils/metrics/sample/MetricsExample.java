@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
  */
 @Singleton
 @Component(service = {})
-public class MetricsExample implements Runnable, AutoCloseable {
+public final class MetricsExample implements Runnable, AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(MetricsExample.class);
 
