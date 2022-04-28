@@ -7,12 +7,13 @@
  */
 package org.opendaylight.serviceutils.tools.mdsal.testutils;
 
-import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth.assertWithMessage;
 import static java.util.concurrent.TimeUnit.MINUTES;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
@@ -27,17 +28,15 @@ import org.opendaylight.yangtools.yang.common.RpcResult;
  *
  * @author Michael Vorburger.ch
  */
-@SuppressFBWarnings("BC_UNCONFIRMED_CAST") // see https://wiki.opendaylight.org/view/BestPractices/Coding_Guidelines#Unchecked.2Funconfirmed_cast_from_com.google.common.truth.Subject_to_com.google.common.truth.BooleanSubject_etc.
 public final class TestFutureRpcResults {
-
     private TestFutureRpcResults() {
-
+        // Hidden on purpose
     }
 
     private static <T> T getResult(RpcResult<T> rpcResult) {
-        assertWithMessage("rpcResult.isSuccessful").that(rpcResult.isSuccessful()).isTrue();
+        assertTrue("rpcResult.isSuccessful", rpcResult.isSuccessful());
         T result = rpcResult.getResult();
-        assertWithMessage("result").that(result).isNotNull();
+        assertNotNull("result", result);
         return result;
     }
 
@@ -49,22 +48,22 @@ public final class TestFutureRpcResults {
     public static void assertVoidRpcSuccess(Future<RpcResult<Void>> futureRpcResult)
             throws InterruptedException, ExecutionException, TimeoutException {
         RpcResult<Void> rpcResult = futureRpcResult.get(1, MINUTES);
-        assertThat(rpcResult.isSuccessful()).isTrue();
-        assertThat(rpcResult.getErrors()).isEmpty();
+        assertTrue(rpcResult.isSuccessful());
+        assertEquals(List.of(), rpcResult.getErrors());
     }
 
     public static <O extends DataObject> void assertRpcSuccess(Future<RpcResult<O>> futureRpcResult)
             throws InterruptedException, ExecutionException, TimeoutException {
         RpcResult<O> rpcResult = futureRpcResult.get(1, MINUTES);
-        assertThat(rpcResult.isSuccessful()).isTrue();
-        assertThat(rpcResult.getErrors()).isEmpty();
+        assertTrue(rpcResult.isSuccessful());
+        assertEquals(List.of(), rpcResult.getErrors());
     }
 
     public static <T> void assertRpcErrorWithoutCausesOrMessages(Future<RpcResult<T>> futureRpcResult)
             throws InterruptedException, ExecutionException, TimeoutException {
         RpcResult<T> rpcResult = futureRpcResult.get(1, MINUTES);
-        assertWithMessage("rpcResult.isSuccessful").that(rpcResult.isSuccessful()).isFalse();
-        assertWithMessage("rpcResult.errors").that(rpcResult.getErrors()).isEmpty();
+        assertFalse("rpcResult.isSuccessful", rpcResult.isSuccessful());
+        assertEquals("rpcResult.errors", List.of(), rpcResult.getErrors());
     }
 
     public static <T> void assertRpcErrorCause(Future<RpcResult<T>> futureRpcResult, Class<?> expectedExceptionClass,
@@ -74,17 +73,15 @@ public final class TestFutureRpcResults {
 
     private static <T> void assertRpcErrorCause(RpcResult<T> rpcResult, Class<?> expected1stExceptionClass,
             String expected1stRpcErrorMessage) {
-        assertWithMessage("rpcResult.isSuccessful").that(rpcResult.isSuccessful()).isFalse();
-        Collection<RpcError> errors = rpcResult.getErrors();
-        assertWithMessage("rpcResult.errors").that(errors).hasSize(1);
+        assertFalse("rpcResult.isSuccessful", rpcResult.isSuccessful());
+        List<RpcError> errors = rpcResult.getErrors();
+        assertEquals("rpcResult.errors", 1, errors.size());
         RpcError error1 = errors.iterator().next();
-        assertWithMessage("rpcResult.errors[0].errorType").that(error1.getErrorType()).isEqualTo(ErrorType.APPLICATION);
-        assertWithMessage("rpcResult.errors[0].message").that(error1.getMessage())
-            .isEqualTo(expected1stRpcErrorMessage);
+        assertEquals("rpcResult.errors[0].errorType", ErrorType.APPLICATION, error1.getErrorType());
+        assertEquals("rpcResult.errors[0].message", expected1stRpcErrorMessage, error1.getMessage());
         if (error1.getCause() != null) {
             // Check needed because FutureRpcResults does not propagate cause if OperationFailedException
-            assertWithMessage("rpcResult.errors[0].cause").that(error1.getCause())
-                .isInstanceOf(expected1stExceptionClass);
+            assertTrue("rpcResult.errors[0].cause", expected1stExceptionClass.isInstance(error1.getCause()));
         }
     }
 

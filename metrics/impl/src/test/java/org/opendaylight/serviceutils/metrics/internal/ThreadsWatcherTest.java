@@ -7,7 +7,8 @@
  */
 package org.opendaylight.serviceutils.metrics.internal;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.management.ManagementFactory;
 import java.time.Duration;
@@ -15,7 +16,6 @@ import java.time.Instant;
 import org.junit.Test;
 
 public class ThreadsWatcherTest {
-
     @Test
     public void testLogAllThreads() {
         ThreadsWatcher tw = new ThreadsWatcher(ManagementFactory.getThreadMXBean(), 100, Duration.ofNanos(1),
@@ -31,9 +31,9 @@ public class ThreadsWatcherTest {
         ThreadsWatcher tw = new ThreadsWatcher(ManagementFactory.getThreadMXBean(), 100, Duration.ofNanos(1),
             Duration.ofMinutes(1), Duration.ofMinutes(1));
 
-        assertThat(tw.isConsidered(null, now, Duration.ofMinutes(1))).isTrue();
-        assertThat(tw.isConsidered(now, now, Duration.ofMinutes(1))).isFalse();
-        assertThat(tw.isConsidered(now, now.plusSeconds(30), Duration.ofMinutes(1))).isFalse();
-        assertThat(tw.isConsidered(now, now.plusSeconds(60), Duration.ofMinutes(1))).isTrue();
+        assertTrue(tw.isConsidered(null, now, Duration.ofMinutes(1)));
+        assertFalse(tw.isConsidered(now, now, Duration.ofMinutes(1)));
+        assertFalse(tw.isConsidered(now, now.plusSeconds(30), Duration.ofMinutes(1)));
+        assertTrue(tw.isConsidered(now, now.plusSeconds(60), Duration.ofMinutes(1)));
     }
 }

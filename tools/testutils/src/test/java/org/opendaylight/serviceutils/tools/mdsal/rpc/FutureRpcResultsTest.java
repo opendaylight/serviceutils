@@ -7,12 +7,12 @@
  */
 package org.opendaylight.serviceutils.tools.mdsal.rpc;
 
-import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.util.concurrent.Futures.immediateFailedFuture;
 import static com.google.common.util.concurrent.Futures.immediateFuture;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.opendaylight.serviceutils.tools.rpc.FutureRpcResults.LogLevel.NONE;
 
-import com.google.common.truth.Truth;
 import com.google.common.util.concurrent.Futures;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -43,7 +43,7 @@ public class FutureRpcResultsTest {
     public void testListenableFutureSuccess() throws Exception {
         Future<RpcResult<String>> future = FutureRpcResults.fromListenableFuture(
                 LOG, null, () -> immediateFuture("hello, world")).build();
-        Truth.assertThat(TestFutureRpcResults.getResult(future)).isEqualTo("hello, world");
+        assertEquals("hello, world", TestFutureRpcResults.getResult(future));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class FutureRpcResultsTest {
             LOG, "testFromListenableFutureException", null, () -> {
                 throw new IllegalArgumentException("bam");
             }).onFailure(e -> afterLogActionCalled.set(true)).build(), IllegalArgumentException.class, "bam");
-        assertThat(afterLogActionCalled.get()).isTrue();
+        assertTrue(afterLogActionCalled.get());
     }
 
     @Test

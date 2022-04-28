@@ -7,7 +7,7 @@
  */
 package org.opendaylight.serviceutils.metrics.function;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
 import java.io.FileNotFoundException;
@@ -35,7 +35,7 @@ public class CheckedCallableTest {
 
     @Test
     public void testCheckedCallableWithoutAnyException() {
-        assertThat(foo(() -> 43)).isEqualTo(43);
+        assertEquals(43, (int) foo(() -> 43));
     }
 
     private static <T, E extends Exception> T foo(CheckedCallable<T, E> checkedCallable) throws E {
