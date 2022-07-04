@@ -7,7 +7,9 @@
  */
 package org.opendaylight.serviceutils.metrics.prometheus.test;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.opendaylight.serviceutils.metrics.Labeled;
@@ -37,7 +39,7 @@ public class PrometheusMetricProviderImplTest {
         Meter meter = metricProvider.newMeter(
                 MetricDescriptor.builder().anchor(this).project("infrautils").module("metrics").id("test").build());
         meter.mark(123);
-        assertThat(meter.get()).isEqualTo(123L);
+        assertEquals(123L, meter.get());
         meter.close();
     }
 
@@ -48,7 +50,7 @@ public class PrometheusMetricProviderImplTest {
                 MetricDescriptor.builder().anchor(this).project("infrautils").module("metrics").id("test").build(),
                 "label1").label("value1");
         meter.mark(123);
-        assertThat(meter.get()).isEqualTo(123L);
+        assertEquals(123L, meter.get());
         meter.close();
     }
 
@@ -60,15 +62,15 @@ public class PrometheusMetricProviderImplTest {
 
         Meter meterA = meterWithLabel.label("ABC");
         meterA.mark(3);
-        assertThat(meterA.get()).isEqualTo(3);
+        assertEquals(3, meterA.get());
 
         Meter meterB = meterWithLabel.label("DEF");
         meterB.mark(1);
-        assertThat(meterB.get()).isEqualTo(1);
-        assertThat(meterA.get()).isEqualTo(3);
+        assertEquals(1, meterB.get());
+        assertEquals(3, meterA.get());
 
         Meter againMeterA = meterWithLabel.label("ABC");
-        assertThat(againMeterA.get()).isEqualTo(3);
+        assertEquals(3, againMeterA.get());
     }
 
     @Test
@@ -77,7 +79,7 @@ public class PrometheusMetricProviderImplTest {
         Meter meter = metricProvider.newMeter(
                 MetricDescriptor.builder().anchor(this).project("infrautils").module("metrics").id("test").build());
         meter.mark(Double.doubleToRawLongBits(Double.MAX_VALUE));
-        assertThat(meter.get()).isGreaterThan(1000000L);
+        assertThat(meter.get(), greaterThan(1000000L));
     }
 
     // TODO more..
