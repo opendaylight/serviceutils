@@ -7,12 +7,10 @@
  */
 package org.opendaylight.serviceutils.metrics.sample;
 
-import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.exporter.HTTPServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import org.opendaylight.serviceutils.metrics.prometheus.impl.CollectorRegistrySingleton;
-import org.opendaylight.serviceutils.metrics.prometheus.impl.PrometheusMetricProviderImpl;
+import org.opendaylight.serviceutils.metrics.prometheus.impl.PrometheusMetricProvider;
 
 /**
  * Launcher for and demo of simple standalone metrics example reporting to Prometheus.
@@ -21,18 +19,17 @@ import org.opendaylight.serviceutils.metrics.prometheus.impl.PrometheusMetricPro
  */
 public final class MetricsPrometheusExampleMain {
     private MetricsPrometheusExampleMain() {
-
+        // Hidden on purpose
     }
 
     public static void main(String[] args) throws IOException {
         // see also OsgiWebInitializer
-        CollectorRegistry collectorRegistry = new CollectorRegistrySingleton();
-        PrometheusMetricProviderImpl metricProvider = new PrometheusMetricProviderImpl(collectorRegistry);
-        try (MetricsExample metricsExample = new MetricsExample(metricProvider)) {
-            HTTPServer server = new HTTPServer(new InetSocketAddress("localhost", 1234), collectorRegistry);
-            System.in.read();
-            server.stop();
+        try (var metricProvider = new PrometheusMetricProvider()) {
+            try (var metricsExample = new MetricsExample(metricProvider)) {
+                HTTPServer server = new HTTPServer(new InetSocketAddress("localhost", 1234), metricProvider.registry());
+                System.in.read();
+                server.stop();
+            }
         }
-        metricProvider.close();
     }
 }

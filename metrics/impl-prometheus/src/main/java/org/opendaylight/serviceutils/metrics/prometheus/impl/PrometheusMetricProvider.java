@@ -7,20 +7,22 @@
  */
 package org.opendaylight.serviceutils.metrics.prometheus.impl;
 
-import static com.google.common.collect.ImmutableList.of;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-
 import io.prometheus.client.CollectorRegistry;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.PreDestroy;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import org.opendaylight.serviceutils.metrics.Counter;
 import org.opendaylight.serviceutils.metrics.Labeled;
 import org.opendaylight.serviceutils.metrics.Meter;
 import org.opendaylight.serviceutils.metrics.MetricDescriptor;
 import org.opendaylight.serviceutils.metrics.MetricProvider;
 import org.opendaylight.serviceutils.metrics.Timer;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,26 +31,39 @@ import org.slf4j.LoggerFactory;
  *
  * @author Michael Vorburger.ch
  */
-abstract class AbstractPrometheusMetricProvider implements MetricProvider {
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractPrometheusMetricProvider.class);
+@Singleton
+@Component(immediate = true, service = { MetricProvider.class, CollectorRegistryProvider.class })
+public final class PrometheusMetricProvider implements MetricProvider, CollectorRegistryProvider, AutoCloseable {
+    private static final Logger LOG = LoggerFactory.getLogger(PrometheusMetricProvider.class);
 
     // TODO see if we could share this field and more of below with MetricProviderImpl
     private final Map<String, MeterNoChildAdapter> meterParents = new ConcurrentHashMap<>();
     private final Map<List<String>, MeterAdapter> meterChildren = new ConcurrentHashMap<>();
-
-    final CollectorRegistry prometheusRegistry;
+    private final CollectorRegistry prometheusRegistry = new CollectorRegistry(true);
 
     /**
      * Constructor. We force passing an existing CollectorRegistry instead of
      * CollectorRegistry.defaultRegistry because defaultRegistry is static, which is
      * a problem for use e.g. in tests.
      */
-    AbstractPrometheusMetricProvider(CollectorRegistry prometheusRegistry) {
-        this.prometheusRegistry = prometheusRegistry;
+    @Inject
+    @Activate
+    public PrometheusMetricProvider() {
+        // Exposed for DI
     }
 
-    private org.opendaylight.serviceutils.metrics.Meter newOrExistingMeter(
-            MetricDescriptor descriptor, List<String> labelNames, List<String> labelValues) {
+    @PreDestroy
+    @Deactivate
+    public void close() {
+        prometheusRegistry.clear();
+    }
+
+    @Override
+    public CollectorRegistry registry() {
+        return prometheusRegistry;
+    }
+
+    private Meter newOrExistingMeter(MetricDescriptor descriptor, List<String> labelNames, List<String> labelValues) {
         if (labelNames.size() != labelValues.size()) {
             throw new IllegalArgumentException();
         }
@@ -78,114 +93,117 @@ abstract class AbstractPrometheusMetricProvider implements MetricProvider {
     }
 
     @Override
-    public final Meter newMeter(Object anchor, String id) {
+    @Deprecated(forRemoval = true)
+    public Meter newMeter(Object anchor, String id) {
         // The idea is that this method is removed as soon as all current usages have switched to the new signatures
         throw new UnsupportedOperationException("TODO Remove this (use the non-@Deprecated alternative method)");
     }
 
     @Override
-    public final Meter newMeter(MetricDescriptor descriptor) {
-        return newOrExistingMeter(descriptor, emptyList(), emptyList());
+    public Meter newMeter(MetricDescriptor descriptor) {
+        return newOrExistingMeter(descriptor, List.of(), List.of());
     }
 
     @Override
-    public final Labeled<Meter> newMeter(MetricDescriptor descriptor, String labelName) {
-        return labelValue -> newOrExistingMeter(descriptor, singletonList(labelName), singletonList(labelValue));
+    public Labeled<Meter> newMeter(MetricDescriptor descriptor, String labelName) {
+        return labelValue -> newOrExistingMeter(descriptor, List.of(labelName), List.of(labelValue));
     }
 
     @Override
-    public final Labeled<Labeled<Meter>> newMeter(MetricDescriptor descriptor, String firstLabelName,
+    public Labeled<Labeled<Meter>> newMeter(MetricDescriptor descriptor, String firstLabelName,
             String secondLabelName) {
         return firstLabelValue -> secondLabelValue -> newOrExistingMeter(descriptor,
-                of(firstLabelName, secondLabelName), of(firstLabelValue, secondLabelValue));
+            List.of(firstLabelName, secondLabelName), List.of(firstLabelValue, secondLabelValue));
     }
 
     @Override
-    public final Labeled<Labeled<Labeled<Meter>>> newMeter(MetricDescriptor descriptor, String firstLabelName,
+    public Labeled<Labeled<Labeled<Meter>>> newMeter(MetricDescriptor descriptor, String firstLabelName,
             String secondLabelName, String thirdLabelName) {
         return firstLabelValue -> secondLabelValue -> thirdLabelValue -> newOrExistingMeter(descriptor,
-                of(firstLabelName, secondLabelName, thirdLabelName),
-                of(firstLabelValue, secondLabelValue, thirdLabelValue));
+            List.of(firstLabelName, secondLabelName, thirdLabelName),
+            List.of(firstLabelValue, secondLabelValue, thirdLabelValue));
     }
 
     @Override
-    public final Labeled<Labeled<Labeled<Labeled<Meter>>>> newMeter(MetricDescriptor descriptor, String firstLabelName,
+    public Labeled<Labeled<Labeled<Labeled<Meter>>>> newMeter(MetricDescriptor descriptor, String firstLabelName,
             String secondLabelName, String thirdLabelName, String fourthLabelName) {
         return firstLabelValue -> secondLabelValue -> thirdLabelValue -> fourthLabelValue ->
-                newOrExistingMeter(descriptor,
-                        of(firstLabelName, secondLabelName, thirdLabelName, fourthLabelName),
-                        of(firstLabelValue, secondLabelValue, thirdLabelValue, fourthLabelValue));
+            newOrExistingMeter(descriptor,
+                List.of(firstLabelName, secondLabelName, thirdLabelName, fourthLabelName),
+                List.of(firstLabelValue, secondLabelValue, thirdLabelValue, fourthLabelValue));
     }
 
     @Override
-    public final Labeled<Labeled<Labeled<Labeled<Labeled<Meter>>>>> newMeter(MetricDescriptor descriptor,
+    public Labeled<Labeled<Labeled<Labeled<Labeled<Meter>>>>> newMeter(MetricDescriptor descriptor,
             String firstLabelName, String secondLabelName, String thirdLabelName, String fourthLabelName,
             String fifthLabelName) {
         return firstLabelValue -> secondLabelValue -> thirdLabelValue -> fourthLabelValue -> fifthLabelValue ->
-                newOrExistingMeter(descriptor,
-                        of(firstLabelName, secondLabelName, thirdLabelName, fourthLabelName, fifthLabelName),
-                        of(firstLabelValue, secondLabelValue, thirdLabelValue, fourthLabelValue, fifthLabelValue));
+            newOrExistingMeter(descriptor,
+                List.of(firstLabelName, secondLabelName, thirdLabelName, fourthLabelName, fifthLabelName),
+                List.of(firstLabelValue, secondLabelValue, thirdLabelValue, fourthLabelValue, fifthLabelValue));
     }
 
     @Override
-    public final Counter newCounter(Object anchor, String id) {
+    @Deprecated(forRemoval = true)
+    public Counter newCounter(Object anchor, String id) {
         // The idea is that this method is removed as soon as all current usages have switched to the new signatures
         throw new UnsupportedOperationException("TODO Remove this (use the non-@Deprecated alternative method)");
     }
 
     @Override
-    public final Counter newCounter(MetricDescriptor descriptor) {
+    public Counter newCounter(MetricDescriptor descriptor) {
         throw new UnsupportedOperationException("TODO");
     }
 
     @Override
-    public final Labeled<Counter> newCounter(MetricDescriptor descriptor, String labelName) {
+    public Labeled<Counter> newCounter(MetricDescriptor descriptor, String labelName) {
         throw new UnsupportedOperationException("TODO");
     }
 
     @Override
-    public final Labeled<Labeled<Counter>> newCounter(MetricDescriptor descriptor, String firstLabelName,
+    public Labeled<Labeled<Counter>> newCounter(MetricDescriptor descriptor, String firstLabelName,
             String secondLabelName) {
         throw new UnsupportedOperationException("TODO");
     }
 
     @Override
-    public final Labeled<Labeled<Labeled<Counter>>> newCounter(MetricDescriptor descriptor, String firstLabelName,
+    public Labeled<Labeled<Labeled<Counter>>> newCounter(MetricDescriptor descriptor, String firstLabelName,
             String secondLabelName, String thirdLabelName) {
         throw new UnsupportedOperationException("TODO");
     }
 
     @Override
-    public final Labeled<Labeled<Labeled<Labeled<Counter>>>> newCounter(MetricDescriptor descriptor,
-            String firstLabelName, String secondLabelName, String thirdLabelName, String fourthLabelName) {
+    public Labeled<Labeled<Labeled<Labeled<Counter>>>> newCounter(MetricDescriptor descriptor, String firstLabelName,
+            String secondLabelName, String thirdLabelName, String fourthLabelName) {
         throw new UnsupportedOperationException("TODO");
     }
 
     @Override
-    public final Labeled<Labeled<Labeled<Labeled<Labeled<Counter>>>>> newCounter(MetricDescriptor descriptor,
+    public Labeled<Labeled<Labeled<Labeled<Labeled<Counter>>>>> newCounter(MetricDescriptor descriptor,
             String firstLabelName, String secondLabelName, String thirdLabelName, String fourthLabelName,
             String fifthLabelName) {
         throw new UnsupportedOperationException("TODO");
     }
 
     @Override
-    public final Timer newTimer(Object anchor, String id) {
+    @Deprecated(forRemoval = true)
+    public Timer newTimer(Object anchor, String id) {
         // The idea is that this method is removed as soon as all current usages have switched to the new signatures
         throw new UnsupportedOperationException("TODO Remove this (use the non-@Deprecated alternative method)");
     }
 
     @Override
-    public final Timer newTimer(MetricDescriptor descriptor) {
+    public Timer newTimer(MetricDescriptor descriptor) {
         throw new UnsupportedOperationException("TODO");
     }
 
     @Override
-    public final Labeled<Timer> newTimer(MetricDescriptor descriptor, String labelName) {
+    public Labeled<Timer> newTimer(MetricDescriptor descriptor, String labelName) {
         throw new UnsupportedOperationException("TODO");
     }
 
     @Override
-    public final Labeled<Labeled<Timer>> newTimer(MetricDescriptor descriptor, String firstLabelName,
+    public Labeled<Labeled<Timer>> newTimer(MetricDescriptor descriptor, String firstLabelName,
             String secondLabelName) {
         throw new UnsupportedOperationException("TODO");
     }

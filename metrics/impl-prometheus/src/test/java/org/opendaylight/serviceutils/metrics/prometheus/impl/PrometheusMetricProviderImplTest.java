@@ -5,7 +5,7 @@
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
-package org.opendaylight.serviceutils.metrics.prometheus.test;
+package org.opendaylight.serviceutils.metrics.prometheus.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -16,8 +16,6 @@ import org.opendaylight.serviceutils.metrics.Labeled;
 import org.opendaylight.serviceutils.metrics.Meter;
 import org.opendaylight.serviceutils.metrics.MetricDescriptor;
 import org.opendaylight.serviceutils.metrics.MetricProvider;
-import org.opendaylight.serviceutils.metrics.prometheus.impl.CollectorRegistrySingleton;
-import org.opendaylight.serviceutils.metrics.prometheus.impl.PrometheusMetricProviderImpl;
 
 /**
  * Unit test for {@link PrometheusMetricProviderImpl}.
@@ -25,38 +23,31 @@ import org.opendaylight.serviceutils.metrics.prometheus.impl.PrometheusMetricPro
  * @author Michael Vorburger.ch
  */
 public class PrometheusMetricProviderImplTest {
-
     // TODO share all @Test with existing MetricProviderTest through some refactoring
 
-    @Test
-    public void testNewMetricProvider() {
-        new PrometheusMetricProviderImpl(new CollectorRegistrySingleton());
-    }
+    private final MetricProvider metricProvider = new PrometheusMetricProvider();
 
     @Test
     public void testNewMeter() {
-        MetricProvider metricProvider = new PrometheusMetricProviderImpl(new CollectorRegistrySingleton());
-        Meter meter = metricProvider.newMeter(
-                MetricDescriptor.builder().anchor(this).project("infrautils").module("metrics").id("test").build());
-        meter.mark(123);
-        assertEquals(123L, meter.get());
-        meter.close();
+        try (var meter = metricProvider.newMeter(
+                MetricDescriptor.builder().anchor(this).project("infrautils").module("metrics").id("test").build())) {
+            meter.mark(123);
+            assertEquals(123L, meter.get());
+        }
     }
 
     @Test
     public void testNewMeterWith1FixedLabel() {
-        MetricProvider metricProvider = new PrometheusMetricProviderImpl(new CollectorRegistrySingleton());
-        Meter meter = metricProvider.newMeter(
+        try (var meter = metricProvider.newMeter(
                 MetricDescriptor.builder().anchor(this).project("infrautils").module("metrics").id("test").build(),
-                "label1").label("value1");
-        meter.mark(123);
-        assertEquals(123L, meter.get());
-        meter.close();
+                "label1").label("value1")) {
+            meter.mark(123);
+            assertEquals(123L, meter.get());
+        }
     }
 
     @Test
     public void testNewMeterWith1DynamicLabel() {
-        MetricProvider metricProvider = new PrometheusMetricProviderImpl(new CollectorRegistrySingleton());
         Labeled<Meter> meterWithLabel = metricProvider.newMeter(MetricDescriptor.builder().anchor(this)
                 .project("infrautils").module("metrics").id("test_meter1").build(), "jobKey");
 
@@ -75,7 +66,6 @@ public class PrometheusMetricProviderImplTest {
 
     @Test
     public void testGetOverflownMeter() {
-        MetricProvider metricProvider = new PrometheusMetricProviderImpl(new CollectorRegistrySingleton());
         Meter meter = metricProvider.newMeter(
                 MetricDescriptor.builder().anchor(this).project("infrautils").module("metrics").id("test").build());
         meter.mark(Double.doubleToRawLongBits(Double.MAX_VALUE));
