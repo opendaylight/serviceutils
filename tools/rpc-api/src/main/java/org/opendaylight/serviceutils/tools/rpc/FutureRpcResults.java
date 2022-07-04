@@ -18,12 +18,10 @@ import com.google.common.util.concurrent.SettableFuture;
 import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import org.eclipse.jdt.annotation.Nullable;
 import org.opendaylight.infrautils.utils.StackTraces;
-import org.opendaylight.yangtools.concepts.Builder;
 import org.opendaylight.yangtools.yang.common.OperationFailedException;
 import org.opendaylight.yangtools.yang.common.RpcError;
 import org.opendaylight.yangtools.yang.common.RpcResult;
@@ -130,22 +128,21 @@ public final class FutureRpcResults {
     @CheckReturnValue
     @SuppressWarnings("InconsistentOverloads") // Error Prone is too strict here; we do want the Callable last
     public static <I, O> FutureRpcResultBuilder<I, O> fromBuilder(Logger logger, String rpcMethodName,
-            @Nullable I input, Callable<Builder<O>> builder) {
-        Callable<ListenableFuture<O>> callable = () -> Futures.immediateFuture(builder.call().build());
-        return fromListenableFuture(logger, rpcMethodName, input, callable);
+            @Nullable I input, Callable<O> callable) {
+        return fromListenableFuture(logger, rpcMethodName, input, () -> Futures.immediateFuture(callable.call()));
     }
 
     @CheckReturnValue
     public static <I, O> FutureRpcResultBuilder<I, O> fromBuilder(Logger logger, @Nullable I input,
-            Callable<Builder<O>> builder) {
-        Callable<ListenableFuture<O>> callable = () -> Futures.immediateFuture(builder.call().build());
-        return fromListenableFuture(logger, StackTraces.getCallersCallerMethodName(), input, callable);
+            Callable<O> builder) {
+        return fromListenableFuture(logger, StackTraces.getCallersCallerMethodName(), input,
+            () -> Futures.immediateFuture(builder.call()));
     }
 
-    public static final class FutureRpcResultBuilder<I, O> implements Builder<Future<RpcResult<O>>> {
-
+    public static final class FutureRpcResultBuilder<I, O> {
         private static final Function<Throwable, String> DEFAULT_ERROR_MESSAGE_FUNCTION = Throwable::getMessage;
         private static final Consumer<Throwable> DEFAULT_ON_FAILURE = throwable -> { };
+
         private final Consumer<O> defaultOnSuccess = result -> { };
 
         // fixed (final) builder values
@@ -179,7 +176,6 @@ public final class FutureRpcResults {
          *         errors are reported as !{@link RpcResult#isSuccessful()}, with
          *         details in {@link RpcResult#getErrors()}, and not the Future itself.
          */
-        @Override
         @CheckReturnValue
         @SuppressWarnings("checkstyle:IllegalCatch")
         public ListenableFuture<RpcResult<O>> build() {
