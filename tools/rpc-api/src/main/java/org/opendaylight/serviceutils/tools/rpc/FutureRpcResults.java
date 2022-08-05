@@ -151,7 +151,7 @@ public final class FutureRpcResults {
         // fixed (final) builder values
         private final Logger logger;
         private final String rpcMethodName;
-        @Nullable private final I input;
+        private final @Nullable I input;
         private final Callable<ListenableFuture<O>> callable;
 
         // optional builder values, which can be overridden by users
