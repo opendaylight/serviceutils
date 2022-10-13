@@ -11,7 +11,7 @@
 
     <groupId>org.opendaylight.serviceutils</groupId>
     <artifactId>odl-serviceutils-rpc</artifactId>
-    <version>0.10.0-SNAPSHOT</version>
+    <version>0.10.1-SNAPSHOT</version>
     <packaging>feature</packaging>
     <name>ODL :: serviceutils :: RPC tools</name>
 
@@ -27,7 +27,7 @@
             <dependency>
                 <groupId>org.opendaylight.serviceutils</groupId>
                 <artifactId>serviceutils-artifacts</artifactId>
-                <version>0.10.0-SNAPSHOT</version>
+                <version>0.10.1-SNAPSHOT</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
