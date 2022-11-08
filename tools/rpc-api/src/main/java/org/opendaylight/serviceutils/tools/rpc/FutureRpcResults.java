@@ -17,11 +17,11 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.SettableFuture;
 import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.lang.StackWalker.StackFrame;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import org.eclipse.jdt.annotation.Nullable;
-import org.opendaylight.infrautils.utils.StackTraces;
 import org.opendaylight.yangtools.yang.common.OperationFailedException;
 import org.opendaylight.yangtools.yang.common.RpcError;
 import org.opendaylight.yangtools.yang.common.RpcResult;
@@ -50,10 +50,10 @@ public final class FutureRpcResults {
      * will log success or failure, with configurable log levels; the caller can also add handlers for success and/or
      * failure.
      *
-     * <p>The RPC's method name is automatically obtained using {@link StackTraces}.  This has some cost, which in
+     * <p>The RPC's method name is automatically obtained from the caller's method name. This has some cost, which in
      * the overall scheme of a typical RPC is typically negligible, but on a highly optimized fast path could
-     * theoretically be an issue; if you see this method as a hot spot in a profiler, then (only) use the
-     * alternative signature where you manually pass the String rpcMethodName.
+     * theoretically be an issue; if you see this method as a hot spot in a profiler, then (only) use the alternative
+     * signature where you manually pass the String rpcMethodName.
      *
      * @param logger the slf4j Logger of the caller
      * @param input the RPC input DataObject of the caller (may be null)
@@ -67,7 +67,7 @@ public final class FutureRpcResults {
     @CheckReturnValue
     public static <I, O> FutureRpcResultBuilder<I, O> fromListenableFuture(Logger logger,
             @Nullable I input, Callable<ListenableFuture<O>> callable) {
-        return new FutureRpcResultBuilder<>(logger, StackTraces.getCallersCallerMethodName(), input, callable);
+        return new FutureRpcResultBuilder<>(logger, callerMethodName(), input, callable);
     }
 
     /**
@@ -135,8 +135,11 @@ public final class FutureRpcResults {
     @CheckReturnValue
     public static <I, O> FutureRpcResultBuilder<I, O> fromBuilder(Logger logger, @Nullable I input,
             Callable<O> builder) {
-        return fromListenableFuture(logger, StackTraces.getCallersCallerMethodName(), input,
-            () -> Futures.immediateFuture(builder.call()));
+        return fromListenableFuture(logger, callerMethodName(), input, () -> Futures.immediateFuture(builder.call()));
+    }
+
+    private static String callerMethodName() {
+        return StackWalker.getInstance().walk(s -> s.skip(3).map(StackFrame::getMethodName).findFirst().orElse(null));
     }
 
     public static final class FutureRpcResultBuilder<I, O> {
@@ -180,7 +183,7 @@ public final class FutureRpcResults {
         @SuppressWarnings("checkstyle:IllegalCatch")
         public ListenableFuture<RpcResult<O>> build() {
             SettableFuture<RpcResult<O>> futureRpcResult = SettableFuture.create();
-            FutureCallback<O> callback = new FutureCallback<O>() {
+            FutureCallback<O> callback = new FutureCallback<>() {
                 @Override
                 public void onSuccess(O result) {
                     onSuccessLogLevel.log(logger, "RPC {}() successful; input = {}, output = {}", rpcMethodName,
