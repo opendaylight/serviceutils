@@ -42,14 +42,14 @@ public class FutureRpcResultsTest {
     @Test
     public void testListenableFutureSuccess() throws Exception {
         Future<RpcResult<String>> future = FutureRpcResults.fromListenableFuture(
-                LOG, null, () -> immediateFuture("hello, world")).build();
+                LOG, "method", null, () -> immediateFuture("hello, world")).build();
         assertEquals("hello, world", TestFutureRpcResults.getResult(future));
     }
 
     @Test
     public void testFailedListenableFuture() throws Exception {
         logCaptureRule.expectError("RPC testFailedListenableFuture() failed; input = null");
-        TestFutureRpcResults.assertRpcErrorCause(FutureRpcResults.fromListenableFuture(LOG, null, () ->
+        TestFutureRpcResults.assertRpcErrorCause(FutureRpcResults.fromListenableFuture(LOG, "method", null, () ->
                 immediateFailedFuture(new IllegalArgumentException("boum"))).build(),
                     IllegalArgumentException.class, "boum");
     }
@@ -57,8 +57,7 @@ public class FutureRpcResultsTest {
     @Test
     public void testFromListenableFutureException() throws Exception {
         logCaptureRule.expectError("RPC testFromListenableFutureException() failed; input = null");
-        TestFutureRpcResults.assertRpcErrorCause(FutureRpcResults.fromListenableFuture(
-            LOG, null, () -> {
+        TestFutureRpcResults.assertRpcErrorCause(FutureRpcResults.fromListenableFuture(LOG, "method", null, () -> {
                 throw new IllegalArgumentException("bam");
             }).build(), IllegalArgumentException.class, "bam");
     }
@@ -93,29 +92,29 @@ public class FutureRpcResultsTest {
     @Test
     public void testFromListenableFutureExceptionCustomMessage() throws Exception {
         logCaptureRule.expectError("RPC testFromListenableFutureExceptionCustomMessage() failed; input = null");
-        TestFutureRpcResults.assertRpcErrorCause(FutureRpcResults.fromListenableFuture(LOG, null, () -> {
+        TestFutureRpcResults.assertRpcErrorCause(FutureRpcResults.fromListenableFuture(LOG, "method", null, () -> {
             throw new IllegalArgumentException("bam");
         }).withRpcErrorMessage(e -> "tra la la").build(), IllegalArgumentException.class, "tra la la");
     }
 
     @Test(expected = IllegalStateException.class)
     public void testExtraOnFailureThrowsException() throws Exception {
-        FutureRpcResults.fromListenableFuture(LOG, null, () -> Futures.immediateFuture(null)).onFailure(failure -> {
-        }).onFailure(failure -> {
-        });
+        FutureRpcResults.fromListenableFuture(LOG, "method", null, () -> Futures.immediateFuture(null))
+            .onFailure(failure -> { })
+            .onFailure(failure -> { });
     }
 
     @Test(expected = IllegalStateException.class)
     public void testExtraOnSuccessThrowsException() throws Exception {
-        FutureRpcResults.fromListenableFuture(LOG, null, () -> Futures.immediateFuture(null)).onSuccess(result -> {
-        }).onSuccess(result -> {
-        });
+        FutureRpcResults.fromListenableFuture(LOG, "method", null, () -> Futures.immediateFuture(null))
+            .onSuccess(result -> { })
+            .onSuccess(result -> { });
     }
 
     @Test(expected = IllegalStateException.class)
     public void testExtraWithRpcErrorMessageThrowsException() throws Exception {
-        FutureRpcResults.fromListenableFuture(LOG, null, () -> Futures.immediateFuture(null)).withRpcErrorMessage(
-            error -> null).withRpcErrorMessage(error -> null);
+        FutureRpcResults.fromListenableFuture(LOG, "method", null, () -> Futures.immediateFuture(null))
+            .withRpcErrorMessage(error -> null)
+            .withRpcErrorMessage(error -> null);
     }
-
 }
