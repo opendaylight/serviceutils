@@ -5,6 +5,5 @@
 
   <feature name='odl-serviceutils-rpc' version='${project.version}'>
     <feature version="[9,10)">odl-yangtools-common</feature>
-    <feature version="[4,5)">odl-infrautils-utils</feature>
   </feature>
 </features>

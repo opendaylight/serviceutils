@@ -18,13 +18,6 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.opendaylight.infrautils</groupId>
-                <artifactId>infrautils-artifacts</artifactId>
-                <version>4.0.1</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.opendaylight.serviceutils</groupId>
                 <artifactId>serviceutils-artifacts</artifactId>
                 <version>0.11.0-SNAPSHOT</version>
@@ -42,12 +35,6 @@
     </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>org.opendaylight.infrautils</groupId>
-            <artifactId>odl-infrautils-utils</artifactId>
-            <type>xml</type>
-            <classifier>features</classifier>
-        </dependency>
         <dependency>
             <groupId>org.opendaylight.yangtools</groupId>
             <artifactId>odl-yangtools-common</artifactId>
