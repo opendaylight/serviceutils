@@ -22,7 +22,7 @@
   <!-- <name> formatting is used by autorelease to parse and notify projects on
        build failure. Please do not modify this unless you have a good reason. -->
   <name>ODL :: serviceutils :: ${project.artifactId}</name>
-  <version>0.10.2-SNAPSHOT</version>
+  <version>0.10.3-SNAPSHOT</version>
 
   <dependencyManagement>
     <dependencies>
