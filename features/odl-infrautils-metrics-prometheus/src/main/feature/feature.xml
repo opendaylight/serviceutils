@@ -8,7 +8,7 @@
  -->
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="odl-infrautils-metrics-prometheus">
     <feature name="odl-infrautils-metrics-prometheus">
-        <feature version="[12,13)">odl-servlet-api</feature>
-        <feature version="[12,13)">odl-karaf-feat-jetty</feature>
+        <feature version="[13,14)">odl-servlet-api</feature>
+        <feature version="[13,14)">odl-karaf-feat-jetty</feature>
     </feature>
 </features>
