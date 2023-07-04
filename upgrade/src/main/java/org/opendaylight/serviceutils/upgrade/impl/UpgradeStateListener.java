@@ -7,45 +7,49 @@
  */
 package org.opendaylight.serviceutils.upgrade.impl;
 
-import com.google.common.collect.Iterables;
-import java.util.Collection;
+import static java.util.Objects.requireNonNull;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.opendaylight.mdsal.binding.api.ClusteredDataTreeChangeListener;
+import javax.annotation.PreDestroy;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import org.opendaylight.mdsal.binding.api.DataBroker;
+import org.opendaylight.mdsal.binding.api.DataListener;
 import org.opendaylight.mdsal.binding.api.DataTreeIdentifier;
-import org.opendaylight.mdsal.binding.api.DataTreeModification;
-import org.opendaylight.mdsal.binding.api.WriteTransaction;
 import org.opendaylight.mdsal.common.api.LogicalDatastoreType;
 import org.opendaylight.serviceutils.upgrade.UpgradeState;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.upgrade.rev180702.UpgradeConfig;
-import org.opendaylight.yangtools.concepts.ListenerRegistration;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.upgrade.rev180702.UpgradeConfigBuilder;
+import org.opendaylight.yangtools.concepts.Registration;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// Do *NOT* use annotation based DI with the blueprint-maven-plugin here; the issue is that this will cause
-// problems in other projects having a dependency to this one (they would repeat and re-generate this project's BP XML).
-// FIXME: this problem is solvable by splitting into API + implementation, in which case we end up having scope=test
-public final class UpgradeStateListener implements UpgradeState, ClusteredDataTreeChangeListener<UpgradeConfig> {
+@Singleton
+@Component(service = UpgradeState.class, immediate = true)
+public final class UpgradeStateListener implements UpgradeState, DataListener<UpgradeConfig>, AutoCloseable {
     private static final Logger LOG = LoggerFactory.getLogger(UpgradeStateListener.class);
 
     private final AtomicBoolean isUpgradeInProgress = new AtomicBoolean(false);
-    private final ListenerRegistration<UpgradeStateListener> registration;
+    private final DataBroker dataBroker;
+    private final Registration registration;
 
-    public UpgradeStateListener(DataBroker dataBroker, UpgradeConfig upgradeConfig) {
-        registration = dataBroker.registerDataTreeChangeListener(DataTreeIdentifier.create(
+    @Inject
+    @Activate
+    public UpgradeStateListener(@Reference final DataBroker dataBroker) {
+        this.dataBroker = requireNonNull(dataBroker);
+        registration = dataBroker.registerDataListener(DataTreeIdentifier.create(
             LogicalDatastoreType.CONFIGURATION, InstanceIdentifier.create(UpgradeConfig.class)), this);
-        WriteTransaction tx = dataBroker.newWriteOnlyTransaction();
-        //TODO: DS Writes should ideally be done from one node to avoid ConflictingModExceptions
-        tx.put(LogicalDatastoreType.CONFIGURATION, InstanceIdentifier.create(UpgradeConfig.class), upgradeConfig);
-        try {
-            tx.commit().get();
-        } catch (InterruptedException | ExecutionException e) {
-            LOG.error("Failed to write mdsal config", e);
-        } // Possibility of OptimisticLockException?
     }
 
+    @PreDestroy
+    @Deactivate
+    @Override
     public void close() {
         registration.close();
     }
@@ -56,8 +60,19 @@ public final class UpgradeStateListener implements UpgradeState, ClusteredDataTr
     }
 
     @Override
-    public void onDataTreeChanged(Collection<DataTreeModification<UpgradeConfig>> changes) {
-        final UpgradeConfig change = Iterables.getLast(changes).getRootNode().getDataAfter();
-        isUpgradeInProgress.set(change != null && change.getUpgradeInProgress());
+    public void dataChangedTo(final UpgradeConfig data) {
+        final var upgradeConfig = data != null && data.requireUpgradeInProgress();
+        isUpgradeInProgress.set(upgradeConfig);
+
+        // FIXME: use ClusterSingletonService for these updates
+        var tx = dataBroker.newWriteOnlyTransaction();
+        tx.put(LogicalDatastoreType.OPERATIONAL, InstanceIdentifier.create(UpgradeConfig.class),
+            new UpgradeConfigBuilder().setUpgradeInProgress(upgradeConfig).build());
+
+        try {
+            tx.commit().get();
+        } catch (InterruptedException | ExecutionException e) {
+            LOG.error("Failed to write mdsal config", e);
+        }
     }
 }
