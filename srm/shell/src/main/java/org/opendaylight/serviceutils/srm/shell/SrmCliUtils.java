@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Utility class for SRM Shell.
  */
+@SuppressWarnings("Var")
 public final class SrmCliUtils {
     private static final Logger LOG = LoggerFactory.getLogger(SrmCliUtils.class);
 
