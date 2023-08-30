@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
  * @author Michael Vorburger.ch
  */
 class ThreadsWatcher implements Runnable {
-
     private static final Logger LOG = LoggerFactory.getLogger(ThreadsWatcher.class);
 
     private final int maxThreads;
@@ -124,13 +123,11 @@ class ThreadsWatcher implements Runnable {
         }
     }
 
-    private static class LoggingOutputStream extends ByteArrayOutputStream {
-
+    private static final class LoggingOutputStream extends ByteArrayOutputStream {
         @Override
         public void close() {
             // UTF-8 because that is what ThreadDump writes it in
             LOG.warn("Thread Dump:\n{}", toString(StandardCharsets.UTF_8));
         }
     }
-
 }
