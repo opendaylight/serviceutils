@@ -12,6 +12,7 @@
             mvn:org.opendaylight.serviceutils/metrics-impl/${project.version}/cfg/config
         </configfile>
         <feature version="[12,13)">odl-dropwizard-metrics</feature>
+        <feature version="[5,6)">odl-infrautils-utils</feature>
         <feature version="[10,11)">odl-yangtools-util</feature>
     </feature>
 </features>
