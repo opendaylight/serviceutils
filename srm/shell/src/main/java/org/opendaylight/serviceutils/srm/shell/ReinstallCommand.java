@@ -12,7 +12,7 @@ import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.eclipse.jdt.annotation.Nullable;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.OdlSrmRpcsService;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.Reinstall;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.ReinstallInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.ReinstallInputBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.ReinstallOutput;
@@ -31,11 +31,11 @@ public class ReinstallCommand extends OsgiCommandSupport {
         required = false, multiValued = false)
     String name;
 
-    private final OdlSrmRpcsService srmRpcService;
+    private final Reinstall reinstall;
     private final EntityTypeBase entityType = EntityTypeService.VALUE;
 
-    public ReinstallCommand(OdlSrmRpcsService srmRpcService) {
-        this.srmRpcService = srmRpcService;
+    public ReinstallCommand(Reinstall reinstall) {
+        this.reinstall = reinstall;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ReinstallCommand extends OsgiCommandSupport {
             // We've already shown the relevant error msg
             return null;
         }
-        Future<RpcResult<ReinstallOutput>> result = srmRpcService.reinstall(input);
+        Future<RpcResult<ReinstallOutput>> result = reinstall.invoke(input);
         RpcResult<ReinstallOutput> reinstallResult = result.get();
         printResult(reinstallResult);
         return null;

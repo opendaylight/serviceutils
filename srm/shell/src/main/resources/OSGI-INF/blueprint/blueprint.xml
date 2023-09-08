@@ -8,18 +8,20 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
     <reference id="dataBroker"
                interface="org.opendaylight.mdsal.binding.api.DataBroker"/>
-    <reference id="srmRpcService"
-               interface="org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.OdlSrmRpcsService"/>
+    <reference id="recover"
+               interface="org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.Recover"/>
+    <reference id="reinstall"
+               interface="org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.Reinstall"/>
 
     <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.1.0">
         <command>
             <action class="org.opendaylight.serviceutils.srm.shell.RecoverCommand">
-                <argument ref="srmRpcService"/>
+                <argument ref="recover"/>
             </action>
         </command>
         <command>
             <action class="org.opendaylight.serviceutils.srm.shell.ReinstallCommand">
-                <argument ref="srmRpcService"/>
+                <argument ref="reinstall"/>
             </action>
         </command>
         <command>

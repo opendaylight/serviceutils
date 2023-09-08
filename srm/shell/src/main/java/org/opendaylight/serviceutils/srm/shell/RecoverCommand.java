@@ -12,7 +12,7 @@ import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.eclipse.jdt.annotation.Nullable;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.OdlSrmRpcsService;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.Recover;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.RecoverInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.RecoverInputBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.RecoverOutput;
@@ -32,10 +32,10 @@ public class RecoverCommand extends OsgiCommandSupport {
     String name;
     @Argument(index = 2, name = "id", description = "EntityId, optional", required = false, multiValued = false)
     String id;
-    private final OdlSrmRpcsService srmRpcService;
+    private final Recover recover;
 
-    public RecoverCommand(OdlSrmRpcsService srmRpcService) {
-        this.srmRpcService = srmRpcService;
+    public RecoverCommand(Recover recover) {
+        this.recover = recover;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class RecoverCommand extends OsgiCommandSupport {
             // We've already shown the relevant error msg
             return null;
         }
-        Future<RpcResult<RecoverOutput>> result = srmRpcService.recover(input);
+        Future<RpcResult<RecoverOutput>> result = recover.invoke(input);
         RpcResult<RecoverOutput> recoverResult = result.get();
         printResult(recoverResult);
         return null;
