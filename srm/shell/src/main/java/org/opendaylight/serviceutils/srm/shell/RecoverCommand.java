@@ -7,14 +7,14 @@
  */
 package org.opendaylight.serviceutils.srm.shell;
 
-import java.util.concurrent.Future;
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.eclipse.jdt.annotation.Nullable;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.OdlSrmRpcsService;
+import org.opendaylight.serviceutils.srm.impl.SrmRpcProvider;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.Recover;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.RecoverInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.RecoverInputBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.RecoverOutput;
@@ -39,17 +39,17 @@ public class RecoverCommand implements Action {
     @Argument(index = 2, name = "id", description = "EntityId, optional", required = false, multiValued = false)
     private String id;
     @Reference
-    private OdlSrmRpcsService srmRpcService;
+    private SrmRpcProvider srmRpcProvider;
 
     @Override
     public @Nullable Object execute() throws Exception {
         RecoverInput input = getInput();
-        if (input == null || srmRpcService == null) {
+        if (input == null || srmRpcProvider == null) {
             // We've already shown the relevant error msg
             return null;
         }
-        Future<RpcResult<RecoverOutput>> result = srmRpcService.recover(input);
-        RpcResult<RecoverOutput> recoverResult = result.get();
+        final var result = srmRpcProvider.getRpcClassToInstanceMap().getInstance(Recover.class).invoke(input);
+        final var recoverResult = result.get();
         printResult(recoverResult);
         return null;
     }

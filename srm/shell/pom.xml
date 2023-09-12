@@ -37,8 +37,8 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
         <artifactId>org.eclipse.jdt.annotation</artifactId>
     </dependency>
     <dependency>
-        <groupId>org.opendaylight.mdsal</groupId>
-        <artifactId>mdsal-binding-api</artifactId>
+      <groupId>org.opendaylight.mdsal</groupId>
+      <artifactId>mdsal-binding-api</artifactId>
     </dependency>
     <dependency>
         <groupId>org.opendaylight.mdsal</groupId>
@@ -55,6 +55,10 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <dependency>
         <groupId>org.opendaylight.yangtools</groupId>
         <artifactId>yang-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.opendaylight.serviceutils</groupId>
+      <artifactId>srm-impl</artifactId>
     </dependency>
   </dependencies>
 
