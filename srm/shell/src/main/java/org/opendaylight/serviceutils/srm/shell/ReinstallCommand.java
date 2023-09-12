@@ -7,14 +7,14 @@
  */
 package org.opendaylight.serviceutils.srm.shell;
 
-import java.util.concurrent.Future;
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.eclipse.jdt.annotation.Nullable;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.OdlSrmRpcsService;
+import org.opendaylight.serviceutils.srm.impl.SrmRpcProvider;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.Reinstall;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.ReinstallInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.ReinstallInputBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.serviceutils.srm.rpc.rev180626.ReinstallOutput;
@@ -38,17 +38,18 @@ public class ReinstallCommand implements Action {
         required = false, multiValued = false)
     private String name;
     @Reference
-    private OdlSrmRpcsService srmRpcService;
+    private SrmRpcProvider srmRpcProvider;
 
     @Override
     @SuppressWarnings("Var")
     public @Nullable Object execute() throws Exception {
         ReinstallInput input = getInput();
-        if (input == null || srmRpcService == null) {
+        if (input == null || srmRpcProvider == null) {
             return null;
         }
-        Future<RpcResult<ReinstallOutput>> result = srmRpcService.reinstall(input);
-        RpcResult<ReinstallOutput> reinstallResult = result.get();
+        final var reinstallRpc = ((Reinstall) srmRpcProvider.getRpcClassToInstanceMap().get(Reinstall.class));
+        final var result = reinstallRpc.invoke(input);
+        final var reinstallResult = result.get();
         printResult(reinstallResult);
         return null;
     }
