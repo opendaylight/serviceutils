@@ -58,4 +58,19 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
       <artifactId>org.osgi.service.component.annotations</artifactId>
     </dependency>
   </dependencies>
+
+  <!-- define export package explicitly because plugin omits impl packages by default -->
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Export-Package>org.opendaylight.serviceutils.srm.impl</Export-Package>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
