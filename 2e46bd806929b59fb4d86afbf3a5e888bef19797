@@ -24,6 +24,30 @@
       "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "99e9f366_b9974672",
+        "filename": "srm/impl/src/main/java/org/opendaylight/serviceutils/srm/impl/SrmRpcProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 9255
+      },
+      "writtenOn": "2023-09-18T11:04:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3db1324_39dfc1bb",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 68,
+        "endChar": 67
+      },
+      "revId": "2e46bd806929b59fb4d86afbf3a5e888bef19797",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cc476599_3107e808",
@@ -47,6 +71,30 @@
       "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "399c7649_a574a8c6",
+        "filename": "srm/shell/src/main/java/org/opendaylight/serviceutils/srm/shell/RecoverCommand.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 9255
+      },
+      "writtenOn": "2023-09-18T11:04:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cc476599_3107e808",
+      "range": {
+        "startLine": 52,
+        "startChar": 83,
+        "endLine": 52,
+        "endChar": 104
+      },
+      "revId": "2e46bd806929b59fb4d86afbf3a5e888bef19797",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e7ec690f_4d101b16",
@@ -60,6 +108,30 @@
       "writtenOn": "2023-09-18T09:55:45Z",
       "side": 1,
       "message": "use getInstance(...) instead of get(...) to avoid extra casting",
+      "range": {
+        "startLine": 50,
+        "startChar": 88,
+        "endLine": 50,
+        "endChar": 110
+      },
+      "revId": "2e46bd806929b59fb4d86afbf3a5e888bef19797",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "26960c64_00040706",
+        "filename": "srm/shell/src/main/java/org/opendaylight/serviceutils/srm/shell/ReinstallCommand.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 9255
+      },
+      "writtenOn": "2023-09-18T11:04:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7ec690f_4d101b16",
       "range": {
         "startLine": 50,
         "startChar": 88,
