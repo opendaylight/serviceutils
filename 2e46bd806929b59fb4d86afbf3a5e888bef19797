@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3db1324_39dfc1bb",
+        "filename": "srm/impl/src/main/java/org/opendaylight/serviceutils/srm/impl/SrmRpcProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 8894
+      },
+      "writtenOn": "2023-09-18T09:55:45Z",
+      "side": 1,
+      "message": "1. prefer interfaces in return type over implementations\n2. dont use generics without a type (raw)\n\ni.e.\npublic ClassToInstanceMap\u003cRpc\u003c?,?\u003e\u003e getRpcClassToInstanceMap()",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 68,
+        "endChar": 67
+      },
+      "revId": "2e46bd806929b59fb4d86afbf3a5e888bef19797",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc476599_3107e808",
+        "filename": "srm/shell/src/main/java/org/opendaylight/serviceutils/srm/shell/RecoverCommand.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 8894
+      },
+      "writtenOn": "2023-09-18T09:55:45Z",
+      "side": 1,
+      "message": "use getInstance(...) instead of get(...) to avoid extra casting",
+      "range": {
+        "startLine": 52,
+        "startChar": 83,
+        "endLine": 52,
+        "endChar": 104
+      },
+      "revId": "2e46bd806929b59fb4d86afbf3a5e888bef19797",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7ec690f_4d101b16",
+        "filename": "srm/shell/src/main/java/org/opendaylight/serviceutils/srm/shell/ReinstallCommand.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 8894
+      },
+      "writtenOn": "2023-09-18T09:55:45Z",
+      "side": 1,
+      "message": "use getInstance(...) instead of get(...) to avoid extra casting",
+      "range": {
+        "startLine": 50,
+        "startChar": 88,
+        "endLine": 50,
+        "endChar": 110
+      },
+      "revId": "2e46bd806929b59fb4d86afbf3a5e888bef19797",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81"
+    }
+  ]
+}
