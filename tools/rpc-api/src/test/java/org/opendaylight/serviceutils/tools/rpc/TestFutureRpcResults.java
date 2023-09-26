@@ -5,7 +5,7 @@
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
-package org.opendaylight.serviceutils.tools.mdsal.testutils;
+package org.opendaylight.serviceutils.tools.rpc;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.junit.Assert.assertEquals;
@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
-import org.opendaylight.serviceutils.tools.rpc.FutureRpcResults;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.common.ErrorType;
 import org.opendaylight.yangtools.yang.common.RpcError;
@@ -84,5 +83,4 @@ public final class TestFutureRpcResults {
             assertTrue("rpcResult.errors[0].cause", expected1stExceptionClass.isInstance(error1.getCause()));
         }
     }
-
 }
