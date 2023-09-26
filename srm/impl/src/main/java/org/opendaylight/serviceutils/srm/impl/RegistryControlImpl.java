@@ -11,13 +11,16 @@ import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
-import java.util.concurrent.ExecutionException;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.SettableFuture;
 import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
 import org.opendaylight.mdsal.binding.api.DataBroker;
 import org.opendaylight.mdsal.binding.api.RpcProviderService;
-import org.opendaylight.mdsal.binding.api.WriteTransaction;
+import org.opendaylight.mdsal.common.api.CommitInfo;
 import org.opendaylight.mdsal.common.api.LogicalDatastoreType;
 import org.opendaylight.serviceutils.srm.spi.RegistryControl;
 import org.opendaylight.serviceutils.tools.rpc.FutureRpcResults;
@@ -135,9 +138,9 @@ public final class RegistryControlImpl implements RegistryControl, AutoCloseable
         this.dataBroker = requireNonNull(dataBroker);
         reg = rpcProvider.registerRpcImplementations(ImmutableClassToInstanceMap.<Rpc<?, ?>>builder()
             .put(Recover.class, input -> FutureRpcResults.fromListenableFuture(LOG, "recover", input,
-                () -> Futures.immediateFuture(recover(input))).build())
+                () -> recover(input)).build())
             .put(Reinstall.class, input -> FutureRpcResults.fromListenableFuture(LOG, "reinstall", input,
-                () -> Futures.immediateFuture(reinstall(input))).build())
+                () -> reinstall(input)).build())
             .build());
     }
 
@@ -149,115 +152,147 @@ public final class RegistryControlImpl implements RegistryControl, AutoCloseable
     }
 
     @Override
-    public RecoverOutput recover(RecoverInput input) {
-        RecoverOutputBuilder outputBuilder = new RecoverOutputBuilder();
-        if (input.getEntityName() == null) {
-            outputBuilder.setResponse(RpcFailEntityName.VALUE)
-                .setMessage("EntityName is null");
-            return outputBuilder.build();
+    public ListenableFuture<RecoverOutput> recover(RecoverInput input) {
+        var entityName = input.getEntityName();
+        if (entityName == null) {
+            return Futures.immediateFuture(new RecoverOutputBuilder()
+                .setResponse(RpcFailEntityName.VALUE)
+                .setMessage("EntityName is null")
+                .build());
         }
         if (input.getEntityType() == null) {
-            outputBuilder.setResponse(RpcFailEntityType.VALUE)
-                .setMessage(String.format("EntityType for %s can't be null", input.getEntityName()));
-            return outputBuilder.build();
+            return Futures.immediateFuture(new RecoverOutputBuilder()
+                .setResponse(RpcFailEntityType.VALUE)
+                .setMessage("EntityType for %s can't be null".formatted(entityName))
+                .build());
         }
-        String entityId;
-        if (EntityTypeInstance.VALUE.equals(input.getEntityType()) && input.getEntityId() ==  null) {
-            outputBuilder.setResponse(RpcFailEntityId.VALUE)
-                .setMessage(String.format("EntityId can't be null for %s", input.getEntityName()));
-            return outputBuilder.build();
-        } else {
-            entityId = input.getEntityId();
+        var entityId = input.getEntityId();
+        if (EntityTypeInstance.VALUE.equals(input.getEntityType()) && entityId == null) {
+            return Futures.immediateFuture(new RecoverOutputBuilder()
+                .setResponse(RpcFailEntityId.VALUE)
+                .setMessage("EntityId can't be null for %s".formatted(entityName))
+                .build());
         }
-        EntityNameBase serviceName = NAME_TO_SERVICE_MAP.get(input.getEntityName());
+        var serviceName = NAME_TO_SERVICE_MAP.get(entityName);
         if (serviceName == null) {
-            outputBuilder.setResponse(RpcFailEntityName.VALUE)
-                .setMessage(String.format("EntityName %s has no matching service", input.getEntityName()));
-            return outputBuilder.build();
+            return Futures.immediateFuture(new RecoverOutputBuilder()
+                .setResponse(RpcFailEntityName.VALUE)
+                .setMessage("EntityName %s has no matching service".formatted(entityName))
+                .build());
         }
-        EntityTypeBase entityType = NAME_TO_TYPE_MAP.get(input.getEntityName());
+        var entityType = NAME_TO_TYPE_MAP.get(entityName);
         if (entityType == null || !input.getEntityType().equals(entityType)) {
-            outputBuilder.setResponse(RpcFailEntityType.VALUE)
-                .setMessage(String.format("EntityName %s doesn't match with EntityType %s",
-                    input.getEntityName(), entityType));
-            return outputBuilder.build();
+            return Futures.immediateFuture(new RecoverOutputBuilder()
+                .setResponse(RpcFailEntityType.VALUE)
+                .setMessage("EntityName %s doesn't match with EntityType %s".formatted(entityName, entityType))
+                .build());
         }
 
-        OperationsBuilder opsBuilder = new OperationsBuilder()
-            .setEntityName(input.getEntityName())
+        var opsBuilder = new OperationsBuilder()
+            .setEntityName(entityName)
             .setEntityType(entityType)
             .setTriggerOperation(ServiceOpRecover.VALUE);
         if (entityId != null) {
             opsBuilder.setEntityId(entityId);
         }
-        Operations operation = opsBuilder.build();
-        InstanceIdentifier<Operations> opsIid = getInstanceIdentifier(operation, serviceName);
-        WriteTransaction tx = dataBroker.newWriteOnlyTransaction();
+        var operation = opsBuilder.build();
+        var opsIid = getInstanceIdentifier(operation, serviceName);
+        var tx = dataBroker.newWriteOnlyTransaction();
         tx.mergeParentStructurePut(LogicalDatastoreType.OPERATIONAL, opsIid, operation);
-        try {
-            tx.commit().get();
-        } catch (InterruptedException | ExecutionException e) {
-            LOG.error("Error writing RecoveryOp to datastore. path:{}, data:{}", opsIid, operation);
-            outputBuilder.setResponse(RpcFailUnknown.VALUE).setMessage(e.getMessage());
-            return outputBuilder.build();
-        }
-        outputBuilder.setResponse(RpcSuccess.VALUE).setMessage("Recovery operation successfully triggered");
-        return outputBuilder.build();
+
+        var ret = SettableFuture.<RecoverOutput>create();
+        Futures.addCallback(tx.commit(), new FutureCallback<CommitInfo>() {
+            @Override
+            public void onSuccess(CommitInfo result) {
+                ret.set(new RecoverOutputBuilder()
+                    .setResponse(RpcSuccess.VALUE)
+                    .setMessage("Recovery operation successfully triggered")
+                    .build());
+            }
+
+            @Override
+            public void onFailure(Throwable cause) {
+                LOG.error("Error writing RecoveryOp to datastore. path:{}, data:{}", opsIid, operation);
+                ret.set(new RecoverOutputBuilder()
+                    .setResponse(RpcFailUnknown.VALUE)
+                    .setMessage(cause.getMessage())
+                    .build());
+            }
+        }, MoreExecutors.directExecutor());
+
+        return ret;
     }
 
     @Override
-    public ReinstallOutput reinstall(ReinstallInput input) {
-        ReinstallOutputBuilder outputBuilder = new ReinstallOutputBuilder();
-        if (input.getEntityName() == null) {
-            outputBuilder.setSuccessful(REINSTALL_FAILED)
-                .setMessage("EntityName is null");
-            return outputBuilder.build();
+    public ListenableFuture<ReinstallOutput> reinstall(ReinstallInput input) {
+        var entityName = input.getEntityName();
+        if (entityName == null) {
+            return Futures.immediateFuture(new ReinstallOutputBuilder()
+                .setSuccessful(REINSTALL_FAILED)
+                .setMessage("EntityName is null").build());
         }
         if (input.getEntityType() == null) {
-            outputBuilder.setSuccessful(REINSTALL_FAILED)
-                .setMessage(String.format("EntityType for %s can't be null", input.getEntityName()));
-            return outputBuilder.build();
+            return Futures.immediateFuture(new ReinstallOutputBuilder()
+                .setSuccessful(REINSTALL_FAILED)
+                .setMessage("EntityType for %s can't be null".formatted(entityName))
+                .build());
         }
 
         if (!EntityTypeService.VALUE.equals(input.getEntityType())) {
-            outputBuilder.setSuccessful(REINSTALL_FAILED)
-                .setMessage(String.format("EntityType is %s, Reinstall is only for EntityTypeService",
-                                          input.getEntityType()));
-            return outputBuilder.build();
+            return Futures.immediateFuture(new ReinstallOutputBuilder()
+                .setSuccessful(REINSTALL_FAILED)
+                .setMessage("EntityType is %s, Reinstall is only for EntityTypeService".formatted(
+                    input.getEntityType()))
+                .build());
         }
 
-        EntityNameBase serviceName = NAME_TO_SERVICE_MAP.get(input.getEntityName());
+        var serviceName = NAME_TO_SERVICE_MAP.get(entityName);
         if (serviceName == null) {
-            outputBuilder.setSuccessful(REINSTALL_FAILED)
-                .setMessage(String.format("EntityName %s has no matching service", input.getEntityName()));
-            return outputBuilder.build();
+            return Futures.immediateFuture(new ReinstallOutputBuilder()
+                .setSuccessful(REINSTALL_FAILED)
+                .setMessage("EntityName %s has no matching service".formatted(entityName))
+                .build());
         }
 
-        EntityTypeBase entityType = NAME_TO_TYPE_MAP.get(input.getEntityName());
+        var entityType = NAME_TO_TYPE_MAP.get(entityName);
         if (entityType == null || !input.getEntityType().equals(entityType)) {
-            outputBuilder.setSuccessful(REINSTALL_FAILED)
-                .setMessage(String.format("EntityName %s doesn't match with EntityType %s",
-                    input.getEntityName(), entityType));
-            return outputBuilder.build();
+            return Futures.immediateFuture(new ReinstallOutputBuilder()
+                .setSuccessful(REINSTALL_FAILED)
+                .setMessage("EntityName %s doesn't match with EntityType %s".formatted(entityName, entityType))
+                .build());
         }
 
-        OperationsBuilder opsBuilder = new OperationsBuilder()
-            .setEntityName(input.getEntityName())
+        var operation = new OperationsBuilder()
+            .setEntityName(entityName)
             .setEntityType(entityType)
-            .setTriggerOperation(ServiceOpReinstall.VALUE);
-        Operations operation = opsBuilder.build();
-        InstanceIdentifier<Operations> opsIid = getInstanceIdentifier(operation, serviceName);
-        WriteTransaction tx = dataBroker.newWriteOnlyTransaction();
+            .setTriggerOperation(ServiceOpReinstall.VALUE)
+            .build();
+        var opsIid = getInstanceIdentifier(operation, serviceName);
+        var tx = dataBroker.newWriteOnlyTransaction();
         tx.mergeParentStructurePut(LogicalDatastoreType.OPERATIONAL, opsIid, operation);
-        try {
-            tx.commit().get();
-        } catch (InterruptedException | ExecutionException e) {
-            LOG.error("Error writing RecoveryOp to datastore. path:{}, data:{}", opsIid, operation);
-            outputBuilder.setSuccessful(REINSTALL_FAILED).setMessage(e.getMessage());
-            return outputBuilder.build();
-        }
-        outputBuilder.setSuccessful(REINSTALL_SUCCESS).setMessage("Recovery operation successfully triggered");
-        return outputBuilder.build();
+
+        var ret = SettableFuture.<ReinstallOutput>create();
+        Futures.addCallback(tx.commit(), new FutureCallback<CommitInfo>() {
+            @Override
+            public void onSuccess(CommitInfo result) {
+                ret.set(new ReinstallOutputBuilder()
+                    .setSuccessful(REINSTALL_SUCCESS)
+                    .setMessage("Recovery operation successfully triggered")
+                    .build());
+            }
+
+            @Override
+            public void onFailure(Throwable cause) {
+                LOG.error("Error writing RecoveryOp to datastore. path:{}, data:{}", opsIid, operation);
+                ret.set(new ReinstallOutputBuilder()
+                    .setSuccessful(REINSTALL_FAILED)
+                    .setMessage(cause.getMessage())
+                    .build());
+
+            }
+        }, MoreExecutors.directExecutor());
+
+        return ret;
     }
 
     private static InstanceIdentifier<Operations> getInstanceIdentifier(
