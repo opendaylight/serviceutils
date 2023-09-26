@@ -5,7 +5,7 @@
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
-package org.opendaylight.serviceutils.tools.mdsal.rpc;
+package org.opendaylight.serviceutils.tools.rpc;
 
 import static com.google.common.util.concurrent.Futures.immediateFailedFuture;
 import static com.google.common.util.concurrent.Futures.immediateFuture;
@@ -20,8 +20,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.opendaylight.infrautils.testutils.LogCaptureRule;
 import org.opendaylight.infrautils.testutils.LogRule;
-import org.opendaylight.serviceutils.tools.mdsal.testutils.TestFutureRpcResults;
-import org.opendaylight.serviceutils.tools.rpc.FutureRpcResults;
 import org.opendaylight.serviceutils.tools.rpc.FutureRpcResults.LogLevel;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.slf4j.Logger;
@@ -33,7 +31,6 @@ import org.slf4j.LoggerFactory;
  * @author Michael Vorburger.ch
  */
 public class FutureRpcResultsTest {
-
     private static final Logger LOG = LoggerFactory.getLogger(FutureRpcResultsTest.class);
 
     public @Rule LogRule logRule = new LogRule();
