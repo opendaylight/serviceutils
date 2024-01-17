@@ -14,7 +14,7 @@ import org.opendaylight.mdsal.binding.api.DataTreeChangeListener;
 import org.opendaylight.mdsal.binding.api.DataTreeIdentifier;
 import org.opendaylight.mdsal.common.api.LogicalDatastoreType;
 import org.opendaylight.serviceutils.metrics.MetricProvider;
-import org.opendaylight.yangtools.concepts.ListenerRegistration;
+import org.opendaylight.yangtools.concepts.Registration;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 
@@ -29,11 +29,11 @@ import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
  */
 abstract class AbstractDataTreeChangeListener<T extends DataObject> implements DataTreeChangeListener<T>,
         DataTreeChangeListenerActions<T>, ChainableDataTreeChangeListener<T>, AutoCloseable {
-
+    private final ChainableDataTreeChangeListenerImpl<T> chainingDelegate = new ChainableDataTreeChangeListenerImpl<>();
     private final DataBroker dataBroker;
     private final DataTreeIdentifier<T> dataTreeIdentifier;
-    private ListenerRegistration<AbstractDataTreeChangeListener<T>> dataChangeListenerRegistration;
-    private final ChainableDataTreeChangeListenerImpl<T> chainingDelegate = new ChainableDataTreeChangeListenerImpl<>();
+
+    private Registration dataChangeListenerRegistration;
     private DataStoreMetrics dataStoreMetrics;
 
     AbstractDataTreeChangeListener(DataBroker dataBroker, DataTreeIdentifier<T> dataTreeIdentifier) {
