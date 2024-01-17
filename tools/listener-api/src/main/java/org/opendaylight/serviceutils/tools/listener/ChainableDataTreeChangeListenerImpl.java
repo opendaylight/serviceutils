@@ -7,7 +7,6 @@
  */
 package org.opendaylight.serviceutils.tools.listener;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.opendaylight.mdsal.binding.api.DataTreeChangeListener;
@@ -25,7 +24,6 @@ import org.slf4j.LoggerFactory;
  */
 public final class ChainableDataTreeChangeListenerImpl<T extends DataObject>
         implements ChainableDataTreeChangeListener<T> {
-
     private static final Logger LOG = LoggerFactory.getLogger(ChainableDataTreeChangeListenerImpl.class);
 
     private final List<DataTreeChangeListener<T>> beforeListeners = new CopyOnWriteArrayList<>();
@@ -42,7 +40,7 @@ public final class ChainableDataTreeChangeListenerImpl<T extends DataObject>
     }
 
     @SuppressWarnings("checkstyle:IllegalCatch")
-    public void notifyBeforeOnDataTreeChanged(Collection<DataTreeModification<T>> changes) {
+    public void notifyBeforeOnDataTreeChanged(List<DataTreeModification<T>> changes) {
         for (DataTreeChangeListener<T> listener : beforeListeners) {
             try {
                 listener.onDataTreeChanged(changes);
@@ -54,7 +52,7 @@ public final class ChainableDataTreeChangeListenerImpl<T extends DataObject>
     }
 
     @SuppressWarnings("checkstyle:IllegalCatch")
-    public void notifyAfterOnDataTreeChanged(Collection<DataTreeModification<T>> changes) {
+    public void notifyAfterOnDataTreeChanged(List<DataTreeModification<T>> changes) {
         for (DataTreeChangeListener<T> listener : afterListeners) {
             try {
                 listener.onDataTreeChanged(changes);
@@ -64,5 +62,4 @@ public final class ChainableDataTreeChangeListenerImpl<T extends DataObject>
             }
         }
     }
-
 }

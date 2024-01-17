@@ -7,7 +7,6 @@
  */
 package org.opendaylight.serviceutils.tools.mdsal.listener;
 
-import java.util.EventListener;
 import org.opendaylight.mdsal.binding.api.DataTreeChangeListener;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 
@@ -18,11 +17,10 @@ import org.opendaylight.yangtools.yang.binding.DataObject;
  * @deprecated Use {@code listener-api} instead.
  */
 @Deprecated
-public interface ChainableDataTreeChangeListener<T extends DataObject> extends EventListener {
-
+public interface ChainableDataTreeChangeListener<T extends DataObject> {
     /**
      * Adds a "chained" DataTreeChangeListener, to which
-     * {@link DataTreeChangeListener#onDataTreeChanged(java.util.Collection)}
+     * {@link DataTreeChangeListener#onDataTreeChanged(java.util.List)}
      * calls are forwarded BEFORE having been processed by this DataTreeChangeListener.
      *
      * <p>If an asychronous DataTreeChangeListener supports chaining, it must forward
@@ -34,7 +32,7 @@ public interface ChainableDataTreeChangeListener<T extends DataObject> extends E
 
     /**
      * Adds a "chained" DataTreeChangeListener, to which
-     * {@link DataTreeChangeListener#onDataTreeChanged(java.util.Collection)}
+     * {@link DataTreeChangeListener#onDataTreeChanged(java.util.List)}
      * calls are forwarded AFTER having been processed by this DataTreeChangeListener.
      *
      * <p>If an asychronous DataTreeChangeListener supports chaining, it must forward
@@ -43,5 +41,4 @@ public interface ChainableDataTreeChangeListener<T extends DataObject> extends E
      * @param listener the chained DataTreeChangeListener to invoke after this one
      */
     void addAfterListener(DataTreeChangeListener<T> listener);
-
 }

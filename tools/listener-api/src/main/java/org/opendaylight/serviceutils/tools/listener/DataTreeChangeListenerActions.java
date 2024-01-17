@@ -7,10 +7,9 @@
  */
 package org.opendaylight.serviceutils.tools.listener;
 
-import java.util.Collection;
+import java.util.List;
 import javax.inject.Singleton;
 import org.eclipse.jdt.annotation.NonNull;
-import org.opendaylight.mdsal.binding.api.DataObjectModification;
 import org.opendaylight.mdsal.binding.api.DataTreeModification;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
@@ -26,7 +25,6 @@ import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
  * @author David Suárez (david.suarez.fuentes@gmail.com)
  */
 interface DataTreeChangeListenerActions<T extends DataObject> {
-
     /**
      * Default method invoked upon data tree change, in turn it calls the
      * appropriate method (add, update, remove) depending on the type of change.
@@ -35,16 +33,15 @@ interface DataTreeChangeListenerActions<T extends DataObject> {
      * @param dataStoreMetrics data store metrics
      */
     @SuppressWarnings("checkstyle:MissingSwitchDefault") // http://errorprone.info/bugpattern/UnnecessaryDefaultInEnumSwitch
-    default void onDataTreeChanged(Collection<DataTreeModification<T>> changes,
-        DataStoreMetrics dataStoreMetrics) {
+    default void onDataTreeChanged(List<DataTreeModification<T>> changes, DataStoreMetrics dataStoreMetrics) {
         // This code is also in DataTreeEventCallbackRegistrarImpl and any changes should be applied there as well
-        for (DataTreeModification<T> dataTreeModification : changes) {
-            InstanceIdentifier<T> instanceIdentifier = dataTreeModification.getRootPath().getRootIdentifier();
-            DataObjectModification<T> dataObjectModification = dataTreeModification.getRootNode();
-            T dataBefore = dataObjectModification.getDataBefore();
-            T dataAfter = dataObjectModification.getDataAfter();
+        for (var dataTreeModification : changes) {
+            var instanceIdentifier = dataTreeModification.getRootPath().path();
+            var  dataObjectModification = dataTreeModification.getRootNode();
+            T dataBefore = dataObjectModification.dataBefore();
+            T dataAfter = dataObjectModification.dataAfter();
 
-            switch (dataObjectModification.getModificationType()) {
+            switch (dataObjectModification.modificationType()) {
                 case SUBTREE_MODIFIED:
                     if (dataStoreMetrics != null) {
                         dataStoreMetrics.incrementUpdated();
