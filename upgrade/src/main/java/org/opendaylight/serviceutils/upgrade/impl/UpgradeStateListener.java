@@ -43,7 +43,7 @@ public final class UpgradeStateListener implements UpgradeState, DataListener<Up
     @Activate
     public UpgradeStateListener(@Reference final DataBroker dataBroker) {
         this.dataBroker = requireNonNull(dataBroker);
-        registration = dataBroker.registerDataListener(DataTreeIdentifier.create(
+        registration = dataBroker.registerDataListener(DataTreeIdentifier.of(
             LogicalDatastoreType.CONFIGURATION, InstanceIdentifier.create(UpgradeConfig.class)), this);
     }
 
