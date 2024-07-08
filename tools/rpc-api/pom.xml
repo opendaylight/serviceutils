@@ -40,8 +40,8 @@
             <artifactId>infrautils-testutils</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.opendaylight.mdsal</groupId>
-            <artifactId>yang-binding</artifactId>
+            <groupId>org.opendaylight.yangtools</groupId>
+            <artifactId>binding-spec</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
