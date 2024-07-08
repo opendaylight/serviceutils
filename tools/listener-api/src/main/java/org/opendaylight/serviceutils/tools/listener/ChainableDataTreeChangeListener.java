@@ -8,7 +8,7 @@
 package org.opendaylight.serviceutils.tools.listener;
 
 import org.opendaylight.mdsal.binding.api.DataTreeChangeListener;
-import org.opendaylight.yangtools.yang.binding.DataObject;
+import org.opendaylight.yangtools.binding.DataObject;
 
 /**
  * {@link DataTreeChangeListener} which can notify another DataTreeChangeListener.
