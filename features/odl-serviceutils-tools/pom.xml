@@ -18,7 +18,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
 
   <groupId>org.opendaylight.serviceutils</groupId>
   <artifactId>odl-serviceutils-tools</artifactId>
-  <version>0.13.2-SNAPSHOT</version>
+  <version>0.13.3-SNAPSHOT</version>
   <packaging>feature</packaging>
   <name>ODL :: serviceutils :: TOOLS</name>
 
@@ -34,7 +34,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
       <dependency>
         <groupId>org.opendaylight.serviceutils</groupId>
         <artifactId>serviceutils-artifacts</artifactId>
-        <version>0.13.2-SNAPSHOT</version>
+        <version>0.13.3-SNAPSHOT</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -63,12 +63,12 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
     <dependency>
       <groupId>org.opendaylight.serviceutils</groupId>
       <artifactId>tools-api</artifactId>
-      <version>0.13.2-SNAPSHOT</version>
+      <version>0.13.3-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.opendaylight.serviceutils</groupId>
       <artifactId>upgrade</artifactId>
-      <version>0.13.2-SNAPSHOT</version>
+      <version>0.13.3-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
