@@ -103,4 +103,3 @@ abstract class AbstractDataTreeChangeListener<T extends DataObject> implements D
         // TODO: to be removed after all listeners migrated to use the new methods
     }
 }
-
