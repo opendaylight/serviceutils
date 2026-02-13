@@ -27,3 +27,6 @@ classes
 maven-metadata-local.xml
 META-INF
 .apt_generated_tests
+.cache/
+node_modules/
+unimgr/
